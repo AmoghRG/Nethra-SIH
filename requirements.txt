@@ -1,0 +1,32 @@
+# NETRA edge pipeline — dependencies
+#
+# CORE. Everything owner B builds (calibration solve, ground projection, TTC,
+# suppression, debounce, event emission) and the entire test suite runs on
+# these alone. Install these first; the pipeline is exercisable on fixtures
+# before the detector is ever installed.
+numpy>=1.26
+PyYAML>=6.0
+requests>=2.31
+
+# DETECTOR EXTRAS. Needed only for owner A's lane (M2 detection/tracking,
+# M4 motion gate) and for the frame-extraction and point-picking helpers in
+# M1. Imported lazily at the call site, so their absence never breaks an
+# import elsewhere in the tree.
+#   pip install ultralytics opencv-python lap
+ultralytics>=8.3
+opencv-python>=4.9
+lap>=0.5
+
+# NORMS / VIDEO INGEST EXTRAS. edge/norms/norms_engine.py imports both at module
+# level, and ingest_video.py imports norms_engine, so a video upload cannot
+# start without them. Undeclared until owner E's video-ingest lane hit it.
+scikit-learn>=1.3
+matplotlib>=3.7
+
+# Browser-playable annotated clips. OpenCV writes MPEG-4 Part 2 (mp4v), which
+# no browser decodes, so the server re-encodes the render to H.264. Uses ffmpeg
+# from PATH if you have it; this package bundles a binary if you do not.
+imageio-ffmpeg>=0.4.9
+
+# TEST
+pytest>=8.0

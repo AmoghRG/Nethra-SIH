@@ -1,0 +1,9 @@
+t_start_s,t_end_s,severity,vehicle_a,vehicle_b,notes
+74.0,76.5,severe,motorcycle,car,near-collision at cross junction main vs minor road
+127.0,129.5,conflict,car,auto,sudden deceleration to avoid slow auto in middle lane
+229.0,231.5,severe,bus,motorcycle,wrong-way motorcycle swerves into shoulder to avoid oncoming bus
+321.0,323.5,conflict,truck,car,merging conflict from ramp onto main arterial
+431.0,433.5,severe,motorcycle,car,blind curve crossing near-miss
+512.0,514.5,conflict,car,pedestrian,jaywalking pedestrian forced vehicle to hard brake
+600.0,602.0,conflict,motorcycle,motorcycle,tailgating high-speed overtake
+704.0,706.5,severe,auto,car,right turn across oncoming traffic gap

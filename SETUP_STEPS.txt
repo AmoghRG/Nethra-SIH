@@ -82,23 +82,20 @@ OPTIONAL - add psql to PATH for this terminal session only:
 
 
 ===============================================================================
-STEP 4 - FETCH ROAD GEOMETRY (one time, needs internet)
+STEP 4 - (REMOVED) FETCH ROAD GEOMETRY
 ===============================================================================
 
-    py -3.14 tools/fetch_roads.py
+No longer needed. The dashboard no longer draws road corridors, so there is
+no OpenStreetMap fetch and no fixtures/road_network.json dependency. The map
+shows one severity pin per uploaded site instead.
+
+tools/fetch_roads.py, fixtures/road_network.json and web/js/roads.js are still
+in the tree, unreferenced, if the corridor view is ever wanted back.
+
+If you want the bundled offline fixtures refreshed:
+
     py -3.14 tools/gen_fixtures.py
     py -3.14 tools/build_standalone.py
-
-Expected output from gen_fixtures.py:
-
-    road network  297
-
-If it says "not baked yet", the fetch failed - see TROUBLESHOOTING below.
-
-IMPORTANT: commit fixtures\road_network.json to git once you have it.
-Overpass (the OpenStreetMap query service) is rate-limited and goes down
-periodically. You do not want to discover that at hour 22. The file is
-deliberately NOT gitignored for this reason.
 
 
 ===============================================================================
@@ -108,6 +105,13 @@ STEP 5 - INSTALL SERVER DEPENDENCIES (one time)
     cd server\api
     py -3.14 -m pip install -r requirements.txt
     cd ..\..
+
+Video upload runs ingest_video.py, which needs the detector and norms extras:
+
+    py -3.14 -m pip install -r requirements.txt
+
+(scikit-learn and matplotlib are in there now - edge/norms imports both at
+module level, so an upload cannot start without them.)
 
 
 ===============================================================================
@@ -142,6 +146,48 @@ Then open in your browser:
     http://localhost:8080/web/
 
 Hard-refresh with Ctrl+Shift+R the first time - map tiles cache aggressively.
+
+
+===============================================================================
+STEP 6b - ADD A VIDEO (the main flow now)
+===============================================================================
+
+In the dashboard, top right:  + Add video
+
+  1. Choose a clip (mp4 / avi / mkv / mov / webm, up to 2 GB).
+  2. Give the site a name.
+  3. Set the location: type lat/lon, click "Use map centre", or click
+     "Pick on map" and then click the spot. Escape cancels picking.
+  4. Choose the processing depth:
+
+         Quick      600 frames    yolov8n.pt   - for a live demo
+         Standard   2,400 frames  yolov8m.pt   - the default
+         Full       whole clip    yolov8m.pt
+
+  5. Upload and analyse.
+
+Each upload adds exactly ONE pin, at the coordinate you gave it. Nothing
+else puts a pin on the map - the database starts empty and sample events are
+no longer auto-seeded.
+
+A blue pin with a spinner appears at once. The dashboard polls every 3
+seconds; the pin turns red (severe), amber (conflict) or green (no conflicts
+above threshold) when the run finishes, and the event list, charts and
+narratives fill in. Click the pin for that site's hourly pattern, speed
+distribution and the annotated render of its clip.
+
+The processing depth is a FRAME BUDGET, not a quality setting. Never quote a
+recall or false-positive figure from a Quick run.
+
+WHAT THE PIN MEANS - say this before a judge asks. The coordinate is the one
+you typed. An uploaded clip has no calibration, so the pipeline builds a
+generic road plane and the location on its events is a placeholder; the server
+replaces it with yours. Distances, speeds, TTC and PET are the pipeline's
+measured metric output. The pin is a site marker, not a GPS fix on the
+vehicles.
+
+Uploads are listed at the bottom of the Add video panel with their status and
+event counts, and "Remove" deletes a clip along with the events it produced.
 
 
 ===============================================================================
@@ -186,11 +232,10 @@ What to look for:
 In the browser at http://localhost:8080/web/ :
 
   [ ] Badge top-right reads "Live API connected"
-  [ ] Real Mangaluru streets visible in dark grey (CARTO basemap)
-  [ ] Coloured corridors along real named roads
-  [ ] Red/amber hotspot dots sitting ON the roads, not floating
-  [ ] Right panel shows junction overview + "Corridors by risk"
-  [ ] Clicking a corridor shows hourly chart + speed histogram
+  [ ] Basemap streets visible in dark grey (CARTO)
+  [ ] A severity pin at every uploaded site
+  [ ] Right panel shows the overview + "Sites by risk"
+  [ ] Clicking a pin shows hourly chart + speed histogram + annotated clip
   [ ] Clicking "Rain" filter changes the event count
   [ ] Clicking "After dark" changes it again
   [ ] Clicking an event row opens narrative + clip
@@ -218,27 +263,38 @@ BADGE MEANINGS (top right of the dashboard)
 TROUBLESHOOTING
 ===============================================================================
 
-fetch_roads.py: "All Overpass mirrors failed" (500 / 504 / timeout)
-    Overpass is busy or rate-limiting you. This is transient.
-    - Wait 2-5 minutes and retry.
-    - Or open the dashboard and click "Bake roads to fixture" (top right).
-      That fetches from your browser instead, then save the downloaded
-      road_network.json into fixtures\ and re-run gen_fixtures.py.
-    - Or copy fixtures\road_network.json from an older working copy.
-
-fetch_roads.py: CERTIFICATE_VERIFY_FAILED
-    You used python3 instead of py -3.14. Use py -3.14.
-    Last resort:  py -3.14 tools/fetch_roads.py --insecure
-    (public read-only OSM data, no credentials sent - but fix the cert
-    situation properly rather than making a habit of it)
-
 curl POST gives "JSON decode error"
     PowerShell mangled the quoting. Use tools/seed_events.py instead.
 
-Map is blank / "No street geometry loaded"
-    You have not run fetch_roads.py yet, or it failed. See STEP 4.
+Map has no pins
+    Expected on a fresh start - the database begins empty and pins come only
+    from uploads. Use + Add video.
 
-Map tiles missing but roads and dots show
+    tools/seed_events.py (STEP 7) adds test EVENTS, which fill the event list
+    and charts but deliberately produce no pins: they have no clip and no
+    operator-entered location behind them.
+
+Upload fails with "Could not reach the server"
+    Terminal A is not running, or apiBase in web\js\config.js does not match
+    the port uvicorn is on.
+
+Clip plays as a black box / "MIME type not supported" / format error
+    The annotated render is MPEG-4 Part 2 (mp4v) - what OpenCV writes, and
+    what no browser decodes. The server re-encodes it to H.264 after each
+    run, but only if it can find ffmpeg. Fix:
+
+        py -3.14 -m pip install imageio-ffmpeg
+
+    then re-upload the clip. Already-processed clips keep the old encoding
+    until they are run again. The job's message says when the step was
+    skipped, and the player shows a link to open the file directly (it plays
+    fine in VLC).
+
+An upload goes straight to "error"
+    Open data\videos\<job_id>\pipeline.log - it holds the full pipeline
+    output. A missing module there means STEP 5 was skipped.
+
+Map tiles missing but pins show
     No internet, or the CARTO key is wrong. Not fatal - the risk layer is
     independent of the basemap, which is deliberate (PRD S6: the demo must
     survive with the network unplugged).
@@ -258,26 +314,17 @@ Postgres authentication failed
 
 
 ===============================================================================
-CHANGING THE JUNCTION
+CHANGING THE OPENING MAP VIEW
 ===============================================================================
 
-Currently set to Pumpwell Circle, Mangaluru (12.86889, 74.86389).
-
-THIS IS A PLACEHOLDER. PRD open question Q1 (which demo video, and is the
-camera angle genuinely elevated) was still unanswered, so no real site was
-fixed. Once it is decided:
-
-  1. Edit web\js\config.js  ->  junction.center  and  junction.name
-  2. py -3.14 tools/fetch_roads.py
-  3. py -3.14 tools/gen_fixtures.py
-  4. py -3.14 tools/build_standalone.py
-
-Corridors, context roads and event placement all derive from that one
-coordinate, so nothing else needs changing.
+web\js\config.js -> junction.center and junction.name set where the map opens
+before anything has been uploaded. That is all they do now. Every real site
+comes from the location entered with a video, so nothing else has to change
+when the demo site is decided.
 
 ALSO: server\api\netra_server.py has WeatherEnricher defaulting to
-13.0106, 74.7943 - about 16 km from Pumpwell. It only shifts sunrise/sunset
-by seconds so nothing visibly breaks, but it should track the real site.
+13.0106, 74.7943. It only shifts sunrise/sunset by seconds, but it should
+track the real site.
 
 
 ===============================================================================
@@ -309,27 +356,28 @@ Known gaps worth raising with the team:
   1. PRD Section 5.5 lists API routes but not response bodies. That gap
      caused most of the integration bugs. The verified shapes are written
      up in contracts\http_api.md - propose adopting that as the real
-     frozen contract.
+     frozen contract. The four /api/videos routes are documented in
+     server\PATCHES_TO_OWNER_D.md and want the same treatment.
 
-  2. /api/segments returns scored POINTS, not road geometry, so it cannot
-     drive a road map as the PRD implies. The dashboard takes corridor
-     geometry from OpenStreetMap instead and uses that endpoint only as a
-     cross-check. Either D attaches geometry, or the PRD should say the
-     map geometry comes from OSM.
+  2. /api/segments returns scored POINTS, not road geometry. That no longer
+     blocks anything - the map is pin-based - but the endpoint is now only a
+     cross-check and the PRD still implies it drives the map.
 
-  3. Clip playback has no contract at all. M11 lists it as P0 but nothing
-     in Section 5 says how a clip reaches the frontend, and M7's design
-     keeps video on the edge. Someone needs to own this or it should be
-     cut from P0.
+  3. Clip playback (M11 P0) now has a path: an uploaded clip's annotated
+     render is served from /videos/<job_id>/out/annotated_video.mp4 and the
+     event's `clip` field points at it. Section 5 still says nothing about
+     how a clip reaches the frontend; this is the de-facto answer and should
+     be written into the contract.
 
   4. compute_risk_score() in netra_server.py implements the PRD's
      risk = base x rain x night x peak model, but NOTHING CALLS IT. So the
      condition-multiplier design - one of the five defensible claims - is
      not actually running. Worth fixing before anyone demos it as working.
 
-  5. M11 now depends on OpenStreetMap being fetched once. That is an
-     internet dependency not in the PRD. It is satisfied offline as long as
-     fixtures\road_network.json is committed before the finale.
+  5. An uploaded clip has no calibration, so ingest_video.py builds a generic
+     road plane. Metres and km/h from such a run are NOT calibrated to that
+     site. The measured 0.136 m rms figure belongs to the demo clip's own
+     calibration and must not be quoted for an uploaded one.
 
 10 bugs were found and fixed in D's server. See server\PATCHES_TO_OWNER_D.md
 for the full list with severity and cause - 5 were hard blockers, and 4 were

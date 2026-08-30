@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "netra/tracks_px.schema.json",
+  "title": "tracks_px.jsonl — one JSON object per line, per track per frame",
+  "description": "AMENDMENT A1. Pixel-space only. Produced by M2 (owner A). Owner B never writes this file.",
+  "type": "object",
+  "required": ["frame", "t", "track_id", "cls", "bbox", "conf"],
+  "additionalProperties": false,
+  "properties": {
+    "frame": {"type": "integer", "minimum": 0},
+    "t": {"description": "Seconds from the start of the video.", "type": "number", "minimum": 0},
+    "track_id": {"type": "integer"},
+    "cls": {"type": "string", "enum": ["car", "motorcycle", "truck", "bus", "auto", "person"]},
+    "bbox": {"description": "[x1, y1, x2, y2] in pixels.", "type": "array", "minItems": 4, "maxItems": 4, "items": {"type": "number"}},
+    "conf": {"type": "number", "minimum": 0, "maximum": 1}
+  }
+}

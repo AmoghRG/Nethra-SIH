@@ -1,12 +1,109 @@
 {
   "ok": true,
-  "data": [
-    {
-      "segment_id": "seg_001",
-      "location": [13.0106, 74.7943],
-      "risk_score": 0.78,
-      "conflict_count": 23
-    }
-  ],
+  "data": {
+    "junction_id": "junction_a_evening",
+    "location": [13.0106, 74.7943],
+    "segments": [
+      {
+        "segment_id": "seg_0",
+        "lane_id": 0,
+        "name": "Main Arterial Eastbound",
+        "heading_deg": 1.7,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [74.79430, 13.01060],
+            [74.79442, 13.01061],
+            [74.79455, 13.01062],
+            [74.79468, 13.01062],
+            [74.79485, 13.01063]
+          ]
+        },
+        "centreline_m": [
+          [0.0, 0.1],
+          [13.25, 0.49],
+          [26.5, 0.89],
+          [39.75, 1.29],
+          [59.62, 1.89]
+        ],
+        "risk_score": 0.78,
+        "risk_level": "high",
+        "conflict_count": 14,
+        "severe_conflict_count": 5,
+        "speed_stats": {
+          "v85_kmh": 49.8,
+          "mean_kmh": 41.2,
+          "sample_size": 62
+        },
+        "hourly_distribution": [0, 0, 0, 1, 3, 8, 12, 18, 14, 9, 6, 2]
+      },
+      {
+        "segment_id": "seg_1",
+        "lane_id": 1,
+        "name": "Cross Street Northbound",
+        "heading_deg": 90.0,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [74.79450, 13.01035],
+            [74.79450, 13.01048],
+            [74.79450, 13.01060],
+            [74.79450, 13.01072],
+            [74.79450, 13.01088]
+          ]
+        },
+        "centreline_m": [
+          [29.9, -25.0],
+          [29.9, -13.96],
+          [29.9, -2.92],
+          [29.9, 8.12],
+          [29.9, 24.68]
+        ],
+        "risk_score": 0.42,
+        "risk_level": "moderate",
+        "conflict_count": 7,
+        "severe_conflict_count": 2,
+        "speed_stats": {
+          "v85_kmh": 34.5,
+          "mean_kmh": 28.0,
+          "sample_size": 38
+        },
+        "hourly_distribution": [0, 0, 0, 0, 1, 4, 6, 8, 5, 4, 2, 1]
+      },
+      {
+        "segment_id": "seg_2",
+        "lane_id": 2,
+        "name": "Main Arterial Westbound",
+        "heading_deg": 181.1,
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [74.79485, 13.01068],
+            [74.79468, 13.01067],
+            [74.79455, 13.01066],
+            [74.79442, 13.01065],
+            [74.79430, 13.01064]
+          ]
+        },
+        "centreline_m": [
+          [60.0, 4.1],
+          [46.76, 3.84],
+          [33.52, 3.57],
+          [20.29, 3.31],
+          [0.43, 2.91]
+        ],
+        "risk_score": 0.61,
+        "risk_level": "high",
+        "conflict_count": 11,
+        "severe_conflict_count": 4,
+        "speed_stats": {
+          "v85_kmh": 46.2,
+          "mean_kmh": 38.5,
+          "sample_size": 54
+        },
+        "hourly_distribution": [0, 0, 0, 1, 2, 6, 10, 14, 11, 7, 4, 1]
+      }
+    ]
+  },
   "error": null
 }

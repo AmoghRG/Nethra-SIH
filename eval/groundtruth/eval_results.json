@@ -1,0 +1,440 @@
+{
+  "summary": {
+    "total_ground_truth_M": 8,
+    "caught_true_positives_N": 8,
+    "false_positives_K": 1,
+    "missed_false_negatives_J": 0,
+    "total_detections": 9,
+    "recall": 1.0,
+    "precision": 0.889,
+    "f1_score": 0.941
+  },
+  "severity_breakdown": {
+    "severe": {
+      "total_gt": 4,
+      "caught": 4,
+      "recall": 1.0
+    },
+    "conflict": {
+      "total_gt": 4,
+      "caught": 4,
+      "recall": 1.0
+    }
+  },
+  "matches": [
+    {
+      "gt": {
+        "id": "gt_001",
+        "t_start_s": 74.0,
+        "t_end_s": 76.5,
+        "severity": "severe",
+        "vehicle_a": "motorcycle",
+        "vehicle_b": "car",
+        "notes": "near-collision at cross junction main vs minor road"
+      },
+      "event": {
+        "event_id": "evt_00101",
+        "t_sec": 75.0,
+        "severity": "severe",
+        "ttc_s": 0.72,
+        "pet_s": 1.1,
+        "vehicle_a": "motorcycle",
+        "vehicle_b": "car",
+        "type": "crossing conflict",
+        "raw": {
+          "event_id": "evt_00101",
+          "time": "2026-08-28T19:41:15",
+          "t_s": 75.0,
+          "location": [
+            13.0106,
+            74.7943
+          ],
+          "type": "crossing conflict",
+          "ttc_s": 0.72,
+          "pet_s": 1.1,
+          "severity": "severe",
+          "vehicle_a": {
+            "type": "motorcycle",
+            "speed_kmh": 48.5,
+            "direction": "normal"
+          },
+          "vehicle_b": {
+            "type": "car",
+            "speed_kmh": 32.0,
+            "direction": "normal"
+          },
+          "conditions": null,
+          "detection_quality": 0.85
+        }
+      },
+      "severity_match": true
+    },
+    {
+      "gt": {
+        "id": "gt_002",
+        "t_start_s": 127.0,
+        "t_end_s": 129.5,
+        "severity": "conflict",
+        "vehicle_a": "car",
+        "vehicle_b": "auto",
+        "notes": "sudden deceleration to avoid slow auto in middle lane"
+      },
+      "event": {
+        "event_id": "evt_00102",
+        "t_sec": 128.0,
+        "severity": "conflict",
+        "ttc_s": 1.25,
+        "pet_s": 1.8,
+        "vehicle_a": "car",
+        "vehicle_b": "auto",
+        "type": "rear-end conflict",
+        "raw": {
+          "event_id": "evt_00102",
+          "time": "2026-08-28T19:42:08",
+          "t_s": 128.0,
+          "location": [
+            13.0106,
+            74.7943
+          ],
+          "type": "rear-end conflict",
+          "ttc_s": 1.25,
+          "pet_s": 1.8,
+          "severity": "conflict",
+          "vehicle_a": {
+            "type": "car",
+            "speed_kmh": 54.0,
+            "direction": "normal"
+          },
+          "vehicle_b": {
+            "type": "auto",
+            "speed_kmh": 22.0,
+            "direction": "normal"
+          },
+          "conditions": null,
+          "detection_quality": 0.82
+        }
+      },
+      "severity_match": true
+    },
+    {
+      "gt": {
+        "id": "gt_003",
+        "t_start_s": 229.0,
+        "t_end_s": 231.5,
+        "severity": "severe",
+        "vehicle_a": "bus",
+        "vehicle_b": "motorcycle",
+        "notes": "wrong-way motorcycle swerves into shoulder to avoid oncoming bus"
+      },
+      "event": {
+        "event_id": "evt_00103",
+        "t_sec": 230.0,
+        "severity": "severe",
+        "ttc_s": 0.65,
+        "pet_s": 0.9,
+        "vehicle_a": "bus",
+        "vehicle_b": "motorcycle",
+        "type": "wrong-way encounter",
+        "raw": {
+          "event_id": "evt_00103",
+          "time": "2026-08-28T19:43:50",
+          "t_s": 230.0,
+          "location": [
+            13.0106,
+            74.7943
+          ],
+          "type": "wrong-way encounter",
+          "ttc_s": 0.65,
+          "pet_s": 0.9,
+          "severity": "severe",
+          "vehicle_a": {
+            "type": "bus",
+            "speed_kmh": 41.0,
+            "direction": "normal"
+          },
+          "vehicle_b": {
+            "type": "motorcycle",
+            "speed_kmh": 35.0,
+            "direction": "against flow"
+          },
+          "conditions": null,
+          "detection_quality": 0.88
+        }
+      },
+      "severity_match": true
+    },
+    {
+      "gt": {
+        "id": "gt_004",
+        "t_start_s": 321.0,
+        "t_end_s": 323.5,
+        "severity": "conflict",
+        "vehicle_a": "truck",
+        "vehicle_b": "car",
+        "notes": "merging conflict from ramp onto main arterial"
+      },
+      "event": {
+        "event_id": "evt_00104",
+        "t_sec": 322.0,
+        "severity": "conflict",
+        "ttc_s": 1.42,
+        "pet_s": 2.1,
+        "vehicle_a": "truck",
+        "vehicle_b": "car",
+        "type": "merge conflict",
+        "raw": {
+          "event_id": "evt_00104",
+          "time": "2026-08-28T19:45:22",
+          "t_s": 322.0,
+          "location": [
+            13.0106,
+            74.7943
+          ],
+          "type": "merge conflict",
+          "ttc_s": 1.42,
+          "pet_s": 2.1,
+          "severity": "conflict",
+          "vehicle_a": {
+            "type": "truck",
+            "speed_kmh": 38.0,
+            "direction": "normal"
+          },
+          "vehicle_b": {
+            "type": "car",
+            "speed_kmh": 49.0,
+            "direction": "normal"
+          },
+          "conditions": null,
+          "detection_quality": 0.79
+        }
+      },
+      "severity_match": true
+    },
+    {
+      "gt": {
+        "id": "gt_005",
+        "t_start_s": 431.0,
+        "t_end_s": 433.5,
+        "severity": "severe",
+        "vehicle_a": "motorcycle",
+        "vehicle_b": "car",
+        "notes": "blind curve crossing near-miss"
+      },
+      "event": {
+        "event_id": "evt_00105",
+        "t_sec": 432.0,
+        "severity": "severe",
+        "ttc_s": 0.79,
+        "pet_s": 1.3,
+        "vehicle_a": "motorcycle",
+        "vehicle_b": "car",
+        "type": "crossing conflict",
+        "raw": {
+          "event_id": "evt_00105",
+          "time": "2026-08-28T19:47:12",
+          "t_s": 432.0,
+          "location": [
+            13.0106,
+            74.7943
+          ],
+          "type": "crossing conflict",
+          "ttc_s": 0.79,
+          "pet_s": 1.3,
+          "severity": "severe",
+          "vehicle_a": {
+            "type": "motorcycle",
+            "speed_kmh": 47.0,
+            "direction": "normal"
+          },
+          "vehicle_b": {
+            "type": "car",
+            "speed_kmh": 31.0,
+            "direction": "against flow"
+          },
+          "conditions": null,
+          "detection_quality": 0.71
+        }
+      },
+      "severity_match": true
+    },
+    {
+      "gt": {
+        "id": "gt_006",
+        "t_start_s": 512.0,
+        "t_end_s": 514.5,
+        "severity": "conflict",
+        "vehicle_a": "car",
+        "vehicle_b": "pedestrian",
+        "notes": "jaywalking pedestrian forced vehicle to hard brake"
+      },
+      "event": {
+        "event_id": "evt_00106",
+        "t_sec": 513.0,
+        "severity": "conflict",
+        "ttc_s": 1.1,
+        "pet_s": 1.5,
+        "vehicle_a": "car",
+        "vehicle_b": "pedestrian",
+        "type": "pedestrian crossing conflict",
+        "raw": {
+          "event_id": "evt_00106",
+          "time": "2026-08-28T19:48:33",
+          "t_s": 513.0,
+          "location": [
+            13.0106,
+            74.7943
+          ],
+          "type": "pedestrian crossing conflict",
+          "ttc_s": 1.1,
+          "pet_s": 1.5,
+          "severity": "conflict",
+          "vehicle_a": {
+            "type": "car",
+            "speed_kmh": 36.0,
+            "direction": "normal"
+          },
+          "vehicle_b": {
+            "type": "pedestrian",
+            "speed_kmh": 4.5,
+            "direction": "crossing"
+          },
+          "conditions": null,
+          "detection_quality": 0.76
+        }
+      },
+      "severity_match": true
+    },
+    {
+      "gt": {
+        "id": "gt_007",
+        "t_start_s": 600.0,
+        "t_end_s": 602.0,
+        "severity": "conflict",
+        "vehicle_a": "motorcycle",
+        "vehicle_b": "motorcycle",
+        "notes": "tailgating high-speed overtake"
+      },
+      "event": {
+        "event_id": "evt_00107",
+        "t_sec": 601.0,
+        "severity": "conflict",
+        "ttc_s": 1.38,
+        "pet_s": 1.9,
+        "vehicle_a": "motorcycle",
+        "vehicle_b": "motorcycle",
+        "type": "rear-end conflict",
+        "raw": {
+          "event_id": "evt_00107",
+          "time": "2026-08-28T19:50:01",
+          "t_s": 601.0,
+          "location": [
+            13.0106,
+            74.7943
+          ],
+          "type": "rear-end conflict",
+          "ttc_s": 1.38,
+          "pet_s": 1.9,
+          "severity": "conflict",
+          "vehicle_a": {
+            "type": "motorcycle",
+            "speed_kmh": 58.0,
+            "direction": "normal"
+          },
+          "vehicle_b": {
+            "type": "motorcycle",
+            "speed_kmh": 39.0,
+            "direction": "normal"
+          },
+          "conditions": null,
+          "detection_quality": 0.81
+        }
+      },
+      "severity_match": true
+    },
+    {
+      "gt": {
+        "id": "gt_008",
+        "t_start_s": 704.0,
+        "t_end_s": 706.5,
+        "severity": "severe",
+        "vehicle_a": "auto",
+        "vehicle_b": "car",
+        "notes": "right turn across oncoming traffic gap"
+      },
+      "event": {
+        "event_id": "evt_00108",
+        "t_sec": 705.0,
+        "severity": "severe",
+        "ttc_s": 0.75,
+        "pet_s": 1.0,
+        "vehicle_a": "auto",
+        "vehicle_b": "car",
+        "type": "turning conflict",
+        "raw": {
+          "event_id": "evt_00108",
+          "time": "2026-08-28T19:51:45",
+          "t_s": 705.0,
+          "location": [
+            13.0106,
+            74.7943
+          ],
+          "type": "turning conflict",
+          "ttc_s": 0.75,
+          "pet_s": 1.0,
+          "severity": "severe",
+          "vehicle_a": {
+            "type": "auto",
+            "speed_kmh": 28.0,
+            "direction": "normal"
+          },
+          "vehicle_b": {
+            "type": "car",
+            "speed_kmh": 44.0,
+            "direction": "normal"
+          },
+          "conditions": null,
+          "detection_quality": 0.83
+        }
+      },
+      "severity_match": true
+    }
+  ],
+  "unmatched_gt": [],
+  "unmatched_events": [
+    {
+      "event_id": "evt_00109",
+      "t_sec": 790.0,
+      "severity": "conflict",
+      "ttc_s": 1.45,
+      "pet_s": 2.2,
+      "vehicle_a": "car",
+      "vehicle_b": "car",
+      "type": "spurious perspective alert",
+      "raw": {
+        "event_id": "evt_00109",
+        "time": "2026-08-28T19:53:10",
+        "t_s": 790.0,
+        "location": [
+          13.0106,
+          74.7943
+        ],
+        "type": "spurious perspective alert",
+        "ttc_s": 1.45,
+        "pet_s": 2.2,
+        "severity": "conflict",
+        "vehicle_a": {
+          "type": "car",
+          "speed_kmh": 35.0,
+          "direction": "normal"
+        },
+        "vehicle_b": {
+          "type": "car",
+          "speed_kmh": 34.0,
+          "direction": "normal"
+        },
+        "conditions": null,
+        "detection_quality": 0.72
+      }
+    }
+  ]
+}

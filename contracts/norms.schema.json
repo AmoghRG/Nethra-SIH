@@ -1,32 +1,42 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "norms.json (PRD 5.4)",
-  "description": "null is a valid value for any field. Consumers must degrade gracefully.",
+  "title": "RoadNorms",
+  "description": "Schema for Section 5.4 norms.json (Output of M5)",
   "type": "object",
+  "required": ["speed_85_kmh", "sample_size", "lanes", "signal_cycle_s"],
   "properties": {
     "speed_85_kmh": {
-      "type": [
-        "number",
-        "null"
-      ]
+      "type": ["number", "null"],
+      "description": "85th-percentile speed in km/h derived from >=200 tracks"
     },
     "sample_size": {
-      "type": [
-        "integer",
-        "null"
-      ]
+      "type": "integer",
+      "minimum": 0,
+      "description": "Number of track samples used to compute norms"
     },
     "lanes": {
-      "type": [
-        "array",
-        "null"
-      ]
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "centreline_m", "heading_deg"],
+        "properties": {
+          "id": {"type": "integer"},
+          "centreline_m": {
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {"type": "number"},
+              "minItems": 2,
+              "maxItems": 2
+            }
+          },
+          "heading_deg": {"type": "number"}
+        }
+      }
     },
     "signal_cycle_s": {
-      "type": [
-        "number",
-        "null"
-      ]
+      "type": ["number", "null"],
+      "description": "Estimated traffic signal cycle duration in seconds, or null if unmeasured/inapplicable"
     }
   }
 }

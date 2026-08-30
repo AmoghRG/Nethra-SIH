@@ -1,0 +1,23 @@
+{
+  "ground_truth_total": 8,
+  "netra": {
+    "method": "NETRA (Ground Metric TTC & PET)",
+    "caught": 8,
+    "missed": 0,
+    "false_positives": 1,
+    "recall": 1.0,
+    "precision": 0.889,
+    "f1_score": 0.941,
+    "mean_lead_time_s": -0.2
+  },
+  "baseline_iou": {
+    "method": "Naive 2D Pixel-IoU Overlap",
+    "caught": 0,
+    "missed": 8,
+    "false_positives": 122,
+    "recall": 0.0,
+    "precision": 0.0,
+    "f1_score": 0.0,
+    "mean_lead_time_s": 0.1
+  }
+}

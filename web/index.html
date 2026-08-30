@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>NETRA — Risk Map</title>
+<title>NETRA — Near-Miss Traffic Risk Analytics</title>
 <link rel="stylesheet" href="vendor/leaflet.css" />
 <link rel="stylesheet" href="css/styles.css" />
 </head>
@@ -24,8 +24,14 @@
       <div id="statusBadge" class="status-badge" role="status" aria-live="polite">
         <span class="dot"></span><span class="status-label">Checking pipeline…</span>
       </div>
-      <button id="bakeRoads" class="ghost-btn" type="button" title="Fetches the street network from OpenStreetMap and downloads it as fixtures/road_network.json. Commit that file and the demo runs fully offline.">
-        Bake roads to fixture
+      <button id="addVideoBtn" class="action-btn" type="button" title="Upload a clip and the location it was filmed at. The pipeline runs and drops a severity pin there.">
+        + Add video
+      </button>
+      <button id="runPipelineBtn" class="ghost-btn" type="button" title="Run the edge pipeline on the bundled sample fixtures and ingest the result">
+        Run sample
+      </button>
+      <button id="openDiagnosticsBtn" class="ghost-btn" type="button" title="View M1–M10 Module Diagnostics, Ground-Truth Validation, & Benchmarks">
+        Module Metrics (M1–M10)
       </button>
     </div>
   </header>
@@ -34,7 +40,7 @@
 
     <aside class="filters" aria-label="Condition filters">
       <h2>Conditions</h2>
-      <p class="filters-hint">Same junction, different conditions. This is the visual proof that risk is condition-aware, not just location-aware.</p>
+      <p class="filters-hint">Same junction, different conditions. Real-time visual proof that risk is condition-aware (M6), not just location-aware.</p>
 
       <div class="filter-group">
         <span class="filter-group-label">Light</span>
@@ -65,14 +71,30 @@
 
       <button id="resetFilters" class="text-btn">Reset filters</button>
 
+      <div class="multipliers-card" id="multipliersCard">
+        <h3>M6 Diurnal Multipliers</h3>
+        <div class="multiplier-grid">
+          <div class="m-item"><span>Rain Factor</span><strong id="multRain">1.0×</strong></div>
+          <div class="m-item"><span>Night Factor</span><strong id="multNight">1.0×</strong></div>
+          <div class="m-item"><span>Peak Factor</span><strong id="multPeak">1.0×</strong></div>
+          <div class="m-item"><span>Solar Light</span><strong id="multLight">Daylight</strong></div>
+        </div>
+      </div>
+
       <div class="summary-card" id="summaryCard">
         <div class="summary-row"><span>Conflicts shown</span><strong id="sumConflicts">–</strong></div>
         <div class="summary-row"><span>Severe (TTC &lt; 0.8s)</span><strong id="sumSevere">–</strong></div>
         <div class="summary-row"><span>Mean detection quality</span><strong id="sumQuality">–</strong></div>
       </div>
 
+      <div class="sites-card" id="sitesCard">
+        <h3>Monitored sites <span class="muted small" id="sitesCount"></span></h3>
+        <ul class="site-list" id="siteList"></ul>
+        <p class="hint small" id="sitesHint">No clips uploaded yet. Use <b>+ Add video</b>.</p>
+      </div>
+
       <div class="health-card" id="healthCard">
-        <h3>Pipeline health <span class="tag-p2">P2</span></h3>
+        <h3>Pipeline Health <span class="tag-p2">Live</span></h3>
         <p id="healthBody">Loading…</p>
       </div>
     </aside>
@@ -80,13 +102,11 @@
     <main class="map-pane">
       <div id="map" role="application" aria-label="Junction risk map"></div>
       <div class="map-legend">
-        <span class="legend-title">Road risk</span>
-        <span class="legend-item"><i style="background:#3ba55d"></i>Low</span>
-        <span class="legend-item"><i style="background:#c7d84a"></i>Medium</span>
-        <span class="legend-item"><i style="background:#e2812c"></i>High</span>
-        <span class="legend-item"><i style="background:#e5484d"></i>Severe</span>
-        <span class="legend-divider"></span>
-        <span class="legend-item"><i class="legend-dot" style="background:#e5484d"></i>Hotspot event</span>
+        <span class="legend-title">Site severity</span>
+        <span class="legend-item"><i class="legend-pin" style="background:#e5484d"></i>Severe (TTC &lt; 0.8s)</span>
+        <span class="legend-item"><i class="legend-pin" style="background:#f5b83d"></i>Conflict (TTC &lt; 1.5s)</span>
+        <span class="legend-item"><i class="legend-pin" style="background:#3ba55d"></i>Clear</span>
+        <span class="legend-item"><i class="legend-pin" style="background:#4fb0ff"></i>Processing</span>
       </div>
       <div class="map-mode-note hidden" id="mapModeNote">Offline schematic view — no tile server reachable.</div>
     </main>
@@ -99,13 +119,20 @@
         <div class="detail-stats">
           <div class="stat"><span>Conflicts</span><strong id="ovConflicts">0</strong></div>
           <div class="stat"><span>Severe</span><strong id="ovSevere">0</strong></div>
-          <div class="stat"><span>Corridors</span><strong id="ovCorridors">0</strong></div>
+          <div class="stat"><span>Sites</span><strong id="ovCorridors">0</strong></div>
         </div>
 
-        <h3>Corridors by risk</h3>
+        <div class="norms-card" id="normsCard">
+          <h3>M5 Calibrated Road Norms</h3>
+          <div class="summary-row"><span>Learned V85 Limit</span><strong id="normV85">–</strong></div>
+          <div class="summary-row"><span>Vehicle Sample Size</span><strong id="normSample">–</strong></div>
+          <div class="summary-row"><span>Discovered Lanes</span><strong id="normLanes">–</strong></div>
+        </div>
+
+        <h3>Sites by risk</h3>
         <ul class="rank-list" id="ovRanking"></ul>
 
-        <p class="hint">Select a corridor on the map for its hourly pattern and speed profile.</p>
+        <p class="hint">Select a pin for that site's hourly pattern and speed profile.</p>
       </div>
 
       <div class="detail-content hidden" id="detailContent">
@@ -117,11 +144,14 @@
           <div class="stat"><span>Risk score</span><strong id="detailRisk">0</strong></div>
         </div>
 
+        <p class="site-status" id="detailStatus"></p>
+        <div class="site-clip" id="detailClip"></div>
+
         <h3>Conflicts by hour of day</h3>
         <canvas id="hourChart" height="140"></canvas>
 
         <h3>Speed distribution</h3>
-        <p class="chart-note">Dashed line marks the learned 85th-percentile speed.</p>
+        <p class="chart-note">Dashed line marks the learned 85th-percentile speed (M5 Road Norms).</p>
         <canvas id="speedChart" height="150"></canvas>
       </div>
     </section>
@@ -131,13 +161,14 @@
   <section class="events-pane" aria-label="Event list">
     <div class="events-header">
       <h2>Detected conflicts <span class="muted" id="eventsCount"></span></h2>
-      <span class="muted small">Click a row for the plain-English write-up and clip, where available.</span>
+      <span class="muted small">Click a row for the M8 plain-English incident write-up and video clip.</span>
     </div>
     <div id="eventsList" class="events-list"></div>
   </section>
 
 </div>
 
+<!-- Event Detail Modal (M8 Narration + Video Clip) -->
 <div id="clipModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="clipModalTitle">
   <div class="modal-card">
     <button class="modal-close" id="clipModalClose" aria-label="Close">✕</button>
@@ -146,11 +177,96 @@
   </div>
 </div>
 
+<!-- Add Video Modal - upload a clip and pin it to a location -->
+<div id="videoModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="videoModalTitle">
+  <div class="modal-card modal-medium">
+    <button class="modal-close" id="videoModalClose" aria-label="Close">✕</button>
+    <h3 id="videoModalTitle">Add video</h3>
+    <p class="modal-sub">The clip runs through detection, tracking, ground projection and the TTC engine. Conflicts it finds are pinned at the location you give here.</p>
+
+    <form id="videoForm" class="video-form">
+      <label class="drop-zone" id="dropZone" for="videoFile">
+        <input type="file" id="videoFile" accept="video/*" hidden />
+        <span class="drop-icon">▲</span>
+        <span class="drop-text" id="dropText">Choose a video, or drop one here</span>
+        <span class="drop-sub">mp4 · avi · mkv · mov · webm — up to 2 GB</span>
+      </label>
+
+      <div class="form-row">
+        <label class="field">
+          <span>Site name</span>
+          <input type="text" id="siteName" placeholder="e.g. Pumpwell Circle, north approach" maxlength="120" />
+        </label>
+      </div>
+
+      <div class="form-row two">
+        <label class="field">
+          <span>Latitude</span>
+          <input type="number" id="siteLat" step="0.000001" min="-90" max="90" placeholder="12.868890" required />
+        </label>
+        <label class="field">
+          <span>Longitude</span>
+          <input type="number" id="siteLon" step="0.000001" min="-180" max="180" placeholder="74.863890" required />
+        </label>
+      </div>
+
+      <div class="form-row inline-actions">
+        <button type="button" class="text-btn" id="pickOnMap">Pick on map</button>
+        <button type="button" class="text-btn" id="useMapCentre">Use map centre</button>
+        <span class="hint small" id="locHint"></span>
+      </div>
+
+      <div class="form-row">
+        <span class="field-label">Processing depth</span>
+        <div class="chip-row" id="qualityRow">
+          <button type="button" class="chip" data-value="quick">Quick — 600 frames</button>
+          <button type="button" class="chip active" data-value="standard">Standard — 2,400 frames</button>
+          <button type="button" class="chip" data-value="full">Full clip</button>
+        </div>
+        <p class="hint small">A frame budget, not a quality setting. Quick uses the small detector and is there so a demo finishes while someone is watching.</p>
+      </div>
+
+      <div class="upload-progress hidden" id="uploadProgress">
+        <div class="bar"><i id="uploadBar"></i></div>
+        <span id="uploadLabel">Uploading…</span>
+      </div>
+
+      <p class="form-error hidden" id="videoError"></p>
+
+      <div class="form-actions">
+        <button type="submit" class="action-btn" id="videoSubmit">Upload and analyse</button>
+      </div>
+    </form>
+
+    <h4 class="uploads-title">Uploads</h4>
+    <div id="uploadsList" class="uploads-list"><p class="empty-note">Nothing uploaded yet.</p></div>
+  </div>
+</div>
+
+<!-- Diagnostics & Module Metrics Modal (M1, M4, M5, M9, M10) -->
+<div id="diagnosticsModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="diagModalTitle">
+  <div class="modal-card modal-large">
+    <button class="modal-close" id="diagModalClose" aria-label="Close">✕</button>
+    <div class="modal-header-tabs">
+      <h3 id="diagModalTitle">System & Module Diagnostics</h3>
+      <div class="tab-buttons" id="diagTabs">
+        <button class="tab-btn active" data-tab="tab-eval">M9 & M10 Evaluation</button>
+        <button class="tab-btn" data-tab="tab-bench">M4 CPU Benchmark</button>
+        <button class="tab-btn" data-tab="tab-norms">M5 Road Norms</button>
+        <button class="tab-btn" data-tab="tab-calib">M1 Calibration</button>
+      </div>
+    </div>
+    <div class="diag-modal-body" id="diagModalContent">
+      <!-- Injected by JavaScript -->
+    </div>
+  </div>
+</div>
+
 <script src="vendor/leaflet.js"></script>
 <script src="vendor/chart.umd.js"></script>
 <script src="js/config.js"></script>
 <script src="js/fixtures.js"></script>
-<script src="js/roads.js"></script>
+<script src="js/sites.js"></script>
 <script src="js/app.js"></script>
 </body>
 </html>

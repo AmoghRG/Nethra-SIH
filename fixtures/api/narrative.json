@@ -1,0 +1,10 @@
+{
+  "ok": true,
+  "data": {
+    "event_id": "evt_00105",
+    "narrative": "At 7:47 pm on Thursday, after dark and in light rain, a motorcycle travelling at 47 km/h approached from the north as a car entered from the east against the usual flow of traffic. The two came within 0.8 seconds of collision. This junction has recorded 23 similar conflicts this month, 16 of them in wet conditions after sunset.",
+    "generated_at": "2026-08-28T19:47:15Z",
+    "cached": true
+  },
+  "error": null
+}

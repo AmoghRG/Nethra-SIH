@@ -2,22 +2,17 @@
  * Everything site-specific lives here so nothing is buried in app.js.
  */
 window.NETRA_CONFIG = {
-  // The junction under analysis. Replace with the real demo-video location
-  // once it's chosen (PRD Section 12, Q1 — still open at time of writing).
+  // Where the map opens. Not a claim about any site — every real location
+  // arrives with an uploaded clip.
   junction: {
-    name: "Pumpwell Circle, Mangaluru",
-    note: "NH-66 × NH-75 — placeholder site until the demo clip's location is fixed.",
+    name: "NETRA Risk Map",
+    note: "Opening view only. Sites come from uploaded videos.",
     center: [12.86889, 74.86389],
   },
 
-  // Half-size of the road-network fetch box, in metres.
-  bboxRadiusM: 800,
-
-  // Corridors within this radius of the junction centre become the
-  // "monitored" roads that get risk-coloured. Everything else renders
-  // as dim context.
-  corridorRadiusM: 260,
-  monitoredCorridors: 6,
+  // Where the map opens before any clip has been uploaded. Every pin after
+  // that comes from the location the operator gave with the video.
+  defaultZoom: 16,
 
   carto: {
     // Basemap key from https://carto.com/basemaps/apikey — free, ~1 minute,
@@ -35,11 +30,4 @@ window.NETRA_CONFIG = {
   // the frontend from the API itself.
   apiBase: "http://localhost:8000",
 
-  // Explicit path to the baked road network, if the defaults don't resolve.
-  // Leave null to try ../fixtures/, fixtures/ and /fixtures/ in turn.
-  roadNetworkUrl: null,
-
-  // Overpass mirror used to fetch real street centrelines when
-  // fixtures/road_network.json is absent.
-  overpassUrl: "https://overpass-api.de/api/interpreter",
 };

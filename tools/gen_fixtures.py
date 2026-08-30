@@ -20,7 +20,7 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent  # repo root
 FIX = ROOT / "fixtures"
 
 # Keep in sync with web/js/config.js
-JUNCTION = {"name": "Pumpwell Circle, Mangaluru", "center": [12.86889, 74.86389]}
+JUNCTION = {"name": "Pumpwell Circle, Mangaluru (sample site)", "center": [12.86889, 74.86389]}
 CENTER = JUNCTION["center"]
 
 random.seed(42)
@@ -46,10 +46,14 @@ def build_events(n=18):
     """
     ConflictEvent records per PRD Section 5.3.
 
-    `location` here is only a fallback: once real street geometry is loaded,
-    the dashboard snaps each event onto an actual road centreline. Everything
-    else — TTC, speeds, conditions, detection quality — is the real payload
-    that drives the map, filters and charts.
+    Every fixture event sits on the junction coordinate exactly, because that
+    is what the pipeline produces: one clip has one calibration, and one
+    calibration has one location. The dashboard groups them into a single
+    site with one pin. Scattering them would invent per-event positions the
+    system never measures.
+
+    TTC, speeds, conditions and detection quality are the real payload that
+    drives the map, filters and charts.
     """
     events = []
     for i in range(n):
@@ -73,10 +77,7 @@ def build_events(n=18):
         events.append({
             "event_id": f"evt_{404 + i:05d}",
             "time": f"2026-08-28T{hour:02d}:{random.randint(0,59):02d}:{random.randint(0,59):02d}",
-            "location": [
-                round(CENTER[0] + random.uniform(-0.0015, 0.0015), 6),
-                round(CENTER[1] + random.uniform(-0.0015, 0.0015), 6),
-            ],
+            "location": [CENTER[0], CENTER[1]],
             "type": random.choice(CONFLICT_TYPES),
             "ttc_s": ttc,
             "pet_s": round(ttc + random.uniform(0.2, 0.9), 2),
@@ -185,8 +186,8 @@ def main():
     for clip in sorted((ROOT / "demo" / "clips").glob("*.webm")):
         clips[clip.stem] = base64.b64encode(clip.read_bytes()).decode()
 
-    # Real street geometry, if it has been baked. Absent on a fresh checkout —
-    # the dashboard then fetches it live from Overpass on first load.
+    # Street geometry, kept only so an older build of the dashboard still
+    # works. The current one draws no roads and never reads this.
     road_network = None
     rn_path = FIX / "road_network.json"
     if rn_path.exists():

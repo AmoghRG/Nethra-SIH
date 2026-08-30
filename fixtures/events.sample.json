@@ -3,21 +3,21 @@
     "event_id": "evt_00417",
     "time": "2026-08-28T20:14:08",
     "location": [
-      12.869599,
-      74.86442
+      12.86889,
+      74.86389
     ],
     "type": "merging conflict",
     "ttc_s": 0.8,
-    "pet_s": 1.66,
+    "pet_s": 1.67,
     "severity": "severe",
     "vehicle_a": {
-      "type": "truck",
-      "speed_kmh": 20,
+      "type": "bus",
+      "speed_kmh": 23,
       "direction": "normal"
     },
     "vehicle_b": {
-      "type": "motorcycle",
-      "speed_kmh": 19,
+      "type": "bus",
+      "speed_kmh": 41,
       "direction": "normal"
     },
     "conditions": {
@@ -30,23 +30,51 @@
   },
   {
     "event_id": "evt_00405",
-    "time": "2026-08-28T09:45:41",
+    "time": "2026-08-28T07:01:35",
     "location": [
-      12.869494,
-      74.863649
+      12.86889,
+      74.86389
     ],
-    "type": "rear-end conflict",
-    "ttc_s": 0.5,
-    "pet_s": 1.11,
+    "type": "crossing conflict",
+    "ttc_s": 0.7,
+    "pet_s": 1.4,
     "severity": "severe",
     "vehicle_a": {
-      "type": "motorcycle",
-      "speed_kmh": 28,
+      "type": "bus",
+      "speed_kmh": 44,
       "direction": "normal"
     },
     "vehicle_b": {
-      "type": "truck",
-      "speed_kmh": 35,
+      "type": "car",
+      "speed_kmh": 42,
+      "direction": "against flow"
+    },
+    "conditions": {
+      "light": "dusk",
+      "weather": "light rain",
+      "surface": "wet"
+    },
+    "detection_quality": 0.6
+  },
+  {
+    "event_id": "evt_00406",
+    "time": "2026-08-28T13:10:44",
+    "location": [
+      12.86889,
+      74.86389
+    ],
+    "type": "rear-end conflict",
+    "ttc_s": 0.5,
+    "pet_s": 0.94,
+    "severity": "severe",
+    "vehicle_a": {
+      "type": "car",
+      "speed_kmh": 31,
+      "direction": "normal"
+    },
+    "vehicle_b": {
+      "type": "auto",
+      "speed_kmh": 20,
       "direction": "normal"
     },
     "conditions": {
@@ -54,46 +82,46 @@
       "weather": "clear",
       "surface": "dry"
     },
-    "detection_quality": 0.91
+    "detection_quality": 0.93
   },
   {
-    "event_id": "evt_00406",
-    "time": "2026-08-28T08:24:06",
+    "event_id": "evt_00407",
+    "time": "2026-08-28T17:51:02",
     "location": [
-      12.868467,
-      74.863422
+      12.86889,
+      74.86389
     ],
-    "type": "rear-end conflict",
+    "type": "merging conflict",
     "ttc_s": 0.8,
-    "pet_s": 1.56,
+    "pet_s": 1.32,
     "severity": "conflict",
     "vehicle_a": {
-      "type": "truck",
-      "speed_kmh": 52,
+      "type": "motorcycle",
+      "speed_kmh": 42,
       "direction": "normal"
     },
     "vehicle_b": {
       "type": "motorcycle",
-      "speed_kmh": 38,
-      "direction": "normal"
+      "speed_kmh": 32,
+      "direction": "against flow"
     },
     "conditions": {
       "light": "dusk",
       "weather": "light rain",
       "surface": "wet"
     },
-    "detection_quality": 0.56
+    "detection_quality": 0.61
   },
   {
-    "event_id": "evt_00407",
-    "time": "2026-08-28T18:55:23",
+    "event_id": "evt_00408",
+    "time": "2026-08-28T19:45:04",
     "location": [
-      12.869122,
-      74.864504
+      12.86889,
+      74.86389
     ],
     "type": "crossing conflict",
-    "ttc_s": 1.3,
-    "pet_s": 1.96,
+    "ttc_s": 0.8,
+    "pet_s": 1.46,
     "severity": "conflict",
     "vehicle_a": {
       "type": "auto",
@@ -106,25 +134,25 @@
       "direction": "normal"
     },
     "conditions": {
-      "light": "dusk",
-      "weather": "light rain",
-      "surface": "wet"
+      "light": "dark",
+      "weather": "clear",
+      "surface": "dry"
     },
-    "detection_quality": 0.61
+    "detection_quality": 0.79
   },
   {
-    "event_id": "evt_00408",
+    "event_id": "evt_00405",
     "time": "2026-08-28T13:22:13",
     "location": [
-      12.869401,
-      74.864495
+      12.86889,
+      74.86389
     ],
     "type": "merging conflict",
     "ttc_s": 0.8,
-    "pet_s": 1.45,
+    "pet_s": 1.19,
     "severity": "conflict",
     "vehicle_a": {
-      "type": "bus",
+      "type": "motorcycle",
       "speed_kmh": 28,
       "direction": "normal"
     },
@@ -138,27 +166,28 @@
       "weather": "clear",
       "surface": "dry"
     },
-    "detection_quality": 0.87
+    "detection_quality": 0.87,
+    "clip": "clips/evt_00405.webm"
   },
   {
-    "event_id": "evt_00405",
+    "event_id": "evt_00410",
     "time": "2026-08-28T18:14:43",
     "location": [
-      12.868363,
-      74.864695
+      12.86889,
+      74.86389
     ],
-    "type": "crossing conflict",
+    "type": "rear-end conflict",
     "ttc_s": 1.3,
-    "pet_s": 1.66,
+    "pet_s": 2.09,
     "severity": "conflict",
     "vehicle_a": {
       "type": "motorcycle",
-      "speed_kmh": 38,
+      "speed_kmh": 32,
       "direction": "normal"
     },
     "vehicle_b": {
-      "type": "truck",
-      "speed_kmh": 31,
+      "type": "motorcycle",
+      "speed_kmh": 34,
       "direction": "normal"
     },
     "conditions": {
@@ -166,56 +195,55 @@
       "weather": "clear",
       "surface": "dry"
     },
-    "detection_quality": 0.8,
-    "clip": "clips/evt_00405.webm"
+    "detection_quality": 0.8
   },
   {
-    "event_id": "evt_00410",
-    "time": "2026-08-28T09:20:13",
+    "event_id": "evt_00411",
+    "time": "2026-08-28T13:20:13",
     "location": [
-      12.869356,
-      74.863577
+      12.86889,
+      74.86389
     ],
     "type": "merging conflict",
     "ttc_s": 1.2,
-    "pet_s": 1.72,
+    "pet_s": 1.75,
     "severity": "conflict",
     "vehicle_a": {
+      "type": "truck",
+      "speed_kmh": 27,
+      "direction": "normal"
+    },
+    "vehicle_b": {
       "type": "auto",
+      "speed_kmh": 22,
+      "direction": "normal"
+    },
+    "conditions": {
+      "light": "dusk",
+      "weather": "light rain",
+      "surface": "wet"
+    },
+    "detection_quality": 0.64
+  },
+  {
+    "event_id": "evt_00412",
+    "time": "2026-08-28T21:27:57",
+    "location": [
+      12.86889,
+      74.86389
+    ],
+    "type": "merging conflict",
+    "ttc_s": 0.75,
+    "pet_s": 1.23,
+    "severity": "severe",
+    "vehicle_a": {
+      "type": "car",
       "speed_kmh": 26,
       "direction": "normal"
     },
     "vehicle_b": {
-      "type": "car",
-      "speed_kmh": 48,
-      "direction": "normal"
-    },
-    "conditions": {
-      "light": "daylight",
-      "weather": "clear",
-      "surface": "dry"
-    },
-    "detection_quality": 0.94
-  },
-  {
-    "event_id": "evt_00411",
-    "time": "2026-08-28T21:14:08",
-    "location": [
-      12.868919,
-      74.862663
-    ],
-    "type": "crossing conflict",
-    "ttc_s": 1.2,
-    "pet_s": 2.0,
-    "severity": "conflict",
-    "vehicle_a": {
-      "type": "car",
-      "speed_kmh": 28,
-      "direction": "normal"
-    },
-    "vehicle_b": {
-      "type": "truck",
-      "speed_kmh": 18,
+      "type": "bus",
+      "speed_kmh": 45,
       "direction": "normal"
     },
     "conditions": {
@@ -223,27 +251,55 @@
       "weather": "clear",
       "surface": "dry"
     },
-    "detection_quality": 0.77
+    "detection_quality": 0.8
   },
   {
-    "event_id": "evt_00412",
-    "time": "2026-08-28T17:35:55",
+    "event_id": "evt_00413",
+    "time": "2026-08-28T22:10:50",
     "location": [
-      12.870217,
-      74.864431
+      12.86889,
+      74.86389
     ],
-    "type": "crossing conflict",
-    "ttc_s": 1.0,
-    "pet_s": 1.68,
-    "severity": "conflict",
+    "type": "merging conflict",
+    "ttc_s": 0.6,
+    "pet_s": 1.1,
+    "severity": "severe",
     "vehicle_a": {
-      "type": "bus",
-      "speed_kmh": 35,
+      "type": "motorcycle",
+      "speed_kmh": 42,
+      "direction": "normal"
+    },
+    "vehicle_b": {
+      "type": "truck",
+      "speed_kmh": 43,
+      "direction": "against flow"
+    },
+    "conditions": {
+      "light": "dark",
+      "weather": "light rain",
+      "surface": "wet"
+    },
+    "detection_quality": 0.57
+  },
+  {
+    "event_id": "evt_00414",
+    "time": "2026-08-28T13:07:43",
+    "location": [
+      12.86889,
+      74.86389
+    ],
+    "type": "merging conflict",
+    "ttc_s": 0.5,
+    "pet_s": 1.23,
+    "severity": "severe",
+    "vehicle_a": {
+      "type": "auto",
+      "speed_kmh": 25,
       "direction": "normal"
     },
     "vehicle_b": {
       "type": "auto",
-      "speed_kmh": 21,
+      "speed_kmh": 41,
       "direction": "normal"
     },
     "conditions": {
@@ -251,19 +307,19 @@
       "weather": "clear",
       "surface": "dry"
     },
-    "detection_quality": 0.9
+    "detection_quality": 0.92
   },
   {
-    "event_id": "evt_00413",
-    "time": "2026-08-28T17:56:46",
+    "event_id": "evt_00415",
+    "time": "2026-08-28T18:16:32",
     "location": [
-      12.86818,
-      74.863892
+      12.86889,
+      74.86389
     ],
     "type": "crossing conflict",
-    "ttc_s": 0.5,
-    "pet_s": 1.06,
-    "severity": "severe",
+    "ttc_s": 1.4,
+    "pet_s": 1.96,
+    "severity": "conflict",
     "vehicle_a": {
       "type": "motorcycle",
       "speed_kmh": 37,
@@ -279,27 +335,27 @@
       "weather": "light rain",
       "surface": "wet"
     },
-    "detection_quality": 0.65
+    "detection_quality": 0.64
   },
   {
-    "event_id": "evt_00414",
+    "event_id": "evt_00416",
     "time": "2026-08-28T14:59:33",
     "location": [
-      12.870145,
-      74.864187
+      12.86889,
+      74.86389
     ],
-    "type": "rear-end conflict",
+    "type": "crossing conflict",
     "ttc_s": 1.1,
-    "pet_s": 1.31,
+    "pet_s": 1.72,
     "severity": "conflict",
     "vehicle_a": {
-      "type": "auto",
-      "speed_kmh": 37,
+      "type": "truck",
+      "speed_kmh": 19,
       "direction": "normal"
     },
     "vehicle_b": {
-      "type": "car",
-      "speed_kmh": 17,
+      "type": "motorcycle",
+      "speed_kmh": 37,
       "direction": "normal"
     },
     "conditions": {
@@ -310,136 +366,136 @@
     "detection_quality": 0.95
   },
   {
-    "event_id": "evt_00415",
-    "time": "2026-08-28T19:52:04",
+    "event_id": "evt_00417",
+    "time": "2026-08-28T09:05:46",
     "location": [
-      12.870324,
-      74.863988
+      12.86889,
+      74.86389
     ],
-    "type": "crossing conflict",
-    "ttc_s": 0.6,
-    "pet_s": 0.89,
-    "severity": "severe",
+    "type": "rear-end conflict",
+    "ttc_s": 1.2,
+    "pet_s": 1.97,
+    "severity": "conflict",
     "vehicle_a": {
-      "type": "truck",
-      "speed_kmh": 28,
+      "type": "bus",
+      "speed_kmh": 26,
       "direction": "normal"
     },
     "vehicle_b": {
-      "type": "auto",
-      "speed_kmh": 47,
+      "type": "car",
+      "speed_kmh": 44,
       "direction": "against flow"
     },
     "conditions": {
-      "light": "dark",
-      "weather": "clear",
-      "surface": "dry"
+      "light": "dusk",
+      "weather": "light rain",
+      "surface": "wet"
     },
-    "detection_quality": 0.8
+    "detection_quality": 0.64
   },
   {
-    "event_id": "evt_00416",
-    "time": "2026-08-28T17:44:12",
+    "event_id": "evt_00418",
+    "time": "2026-08-28T08:13:59",
     "location": [
-      12.869529,
-      74.863587
+      12.86889,
+      74.86389
     ],
     "type": "merging conflict",
-    "ttc_s": 1.1,
-    "pet_s": 1.75,
+    "ttc_s": 1.2,
+    "pet_s": 1.93,
     "severity": "conflict",
     "vehicle_a": {
-      "type": "truck",
-      "speed_kmh": 51,
+      "type": "car",
+      "speed_kmh": 37,
       "direction": "normal"
     },
     "vehicle_b": {
       "type": "truck",
-      "speed_kmh": 21,
+      "speed_kmh": 37,
       "direction": "normal"
     },
     "conditions": {
-      "light": "daylight",
-      "weather": "clear",
-      "surface": "dry"
+      "light": "dusk",
+      "weather": "light rain",
+      "surface": "wet"
     },
-    "detection_quality": 0.93
+    "detection_quality": 0.59
   },
   {
-    "event_id": "evt_00417",
-    "time": "2026-08-28T09:14:37",
+    "event_id": "evt_00419",
+    "time": "2026-08-28T18:21:01",
     "location": [
-      12.868051,
-      74.862603
+      12.86889,
+      74.86389
     ],
     "type": "merging conflict",
-    "ttc_s": 0.5,
-    "pet_s": 0.74,
+    "ttc_s": 0.7,
+    "pet_s": 1.29,
     "severity": "severe",
     "vehicle_a": {
-      "type": "motorcycle",
-      "speed_kmh": 20,
+      "type": "bus",
+      "speed_kmh": 32,
       "direction": "normal"
     },
     "vehicle_b": {
-      "type": "auto",
+      "type": "motorcycle",
       "speed_kmh": 18,
       "direction": "against flow"
     },
     "conditions": {
       "light": "dusk",
-      "weather": "light rain",
-      "surface": "wet"
+      "weather": "clear",
+      "surface": "dry"
     },
-    "detection_quality": 0.61
+    "detection_quality": 0.75
   },
   {
-    "event_id": "evt_00418",
-    "time": "2026-08-28T09:08:46",
+    "event_id": "evt_00420",
+    "time": "2026-08-28T20:55:21",
     "location": [
-      12.870197,
-      74.864103
+      12.86889,
+      74.86389
     ],
-    "type": "rear-end conflict",
-    "ttc_s": 1.0,
-    "pet_s": 1.37,
-    "severity": "conflict",
+    "type": "crossing conflict",
+    "ttc_s": 0.6,
+    "pet_s": 1.16,
+    "severity": "severe",
     "vehicle_a": {
-      "type": "truck",
-      "speed_kmh": 44,
+      "type": "auto",
+      "speed_kmh": 49,
       "direction": "normal"
     },
     "vehicle_b": {
       "type": "car",
-      "speed_kmh": 20,
+      "speed_kmh": 48,
       "direction": "normal"
     },
     "conditions": {
-      "light": "dusk",
+      "light": "dark",
       "weather": "light rain",
       "surface": "wet"
     },
-    "detection_quality": 0.57
+    "detection_quality": 0.64
   },
   {
-    "event_id": "evt_00419",
-    "time": "2026-08-28T20:55:46",
+    "event_id": "evt_00421",
+    "time": "2026-08-28T21:15:50",
     "location": [
-      12.867553,
-      74.86435
+      12.86889,
+      74.86389
     ],
-    "type": "merging conflict",
-    "ttc_s": 0.9,
-    "pet_s": 1.17,
+    "type": "rear-end conflict",
+    "ttc_s": 1.2,
+    "pet_s": 1.97,
     "severity": "conflict",
     "vehicle_a": {
-      "type": "truck",
-      "speed_kmh": 39,
+      "type": "car",
+      "speed_kmh": 24,
       "direction": "normal"
     },
     "vehicle_b": {
       "type": "motorcycle",
-      "speed_kmh": 29,
+      "speed_kmh": 41,
       "direction": "normal"
     },
     "conditions": {
@@ -447,62 +503,6 @@
       "weather": "clear",
       "surface": "dry"
     },
-    "detection_quality": 0.77
-  },
-  {
-    "event_id": "evt_00420",
-    "time": "2026-08-28T09:17:29",
-    "location": [
-      12.868139,
-      74.86516
-    ],
-    "type": "rear-end conflict",
-    "ttc_s": 0.65,
-    "pet_s": 1.42,
-    "severity": "severe",
-    "vehicle_a": {
-      "type": "bus",
-      "speed_kmh": 24,
-      "direction": "normal"
-    },
-    "vehicle_b": {
-      "type": "motorcycle",
-      "speed_kmh": 48,
-      "direction": "normal"
-    },
-    "conditions": {
-      "light": "daylight",
-      "weather": "clear",
-      "surface": "dry"
-    },
-    "detection_quality": 0.89
-  },
-  {
-    "event_id": "evt_00421",
-    "time": "2026-08-28T08:31:30",
-    "location": [
-      12.868031,
-      74.863593
-    ],
-    "type": "crossing conflict",
-    "ttc_s": 0.7,
-    "pet_s": 1.02,
-    "severity": "severe",
-    "vehicle_a": {
-      "type": "motorcycle",
-      "speed_kmh": 42,
-      "direction": "normal"
-    },
-    "vehicle_b": {
-      "type": "auto",
-      "speed_kmh": 43,
-      "direction": "normal"
-    },
-    "conditions": {
-      "light": "daylight",
-      "weather": "clear",
-      "surface": "dry"
-    },
-    "detection_quality": 0.87
+    "detection_quality": 0.79
   }
 ]

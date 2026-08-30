@@ -27,7 +27,7 @@ for tag, path in [
     ('<script src="vendor/chart.umd.js"></script>', "vendor/chart.umd.js"),
     ('<script src="js/config.js"></script>', "js/config.js"),
     ('<script src="js/fixtures.js"></script>', "js/fixtures.js"),
-    ('<script src="js/roads.js"></script>', "js/roads.js"),
+    ('<script src="js/sites.js"></script>', "js/sites.js"),
     ('<script src="js/app.js"></script>', "js/app.js"),
 ]:
     html = html.replace(tag, "<script>\n" + read(path) + "\n</script>")

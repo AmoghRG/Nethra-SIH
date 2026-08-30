@@ -180,3 +180,60 @@ Open `http://localhost:8080/web/`. The badge top-right should read
 **"Live API connected"** and the health panel should show your Postgres state.
 If it reads "Offline — showing fixtures", the dashboard could not reach the
 API and has fallen back to fixtures — check `apiBase` in `web/js/config.js`.
+
+---
+
+# Addition from owner E — video ingest (`/api/videos`)
+
+Not a patch to your code; four new routes and one new module, added because
+the dashboard needed a way to get a clip and a location into the system and
+the ingest has to land in the same database as everything else. Flagged here
+because it is in your directory.
+
+## New files and edits
+
+- **`server/api/video_jobs.py`** — new, entirely mine. Upload storage, a
+  `video_jobs` table in the same SQLite file, and a subprocess runner around
+  `ingest_video.py`.
+- **`server/api/netra_server.py`** — five small edits: `Request` added to the
+  FastAPI import, `import video_jobs`, `video_jobs.init_jobs_table(SQLITE_DB)`
+  next to `init_sqlite()`, the four routes below inserted before the static
+  mounts, and `app.mount("/videos", …)` so uploaded clips and their annotated
+  renders are servable.
+
+Nothing existing was changed in behaviour. Ingest goes through your
+`enricher.enrich` → `store_event_sqlite` → `store_event_postgres` → buffer
+path unchanged, so M6 enrichment and the offline buffer apply to uploaded
+clips exactly as they do to `POST /api/events`.
+
+## Routes
+
+| Method | Path | Notes |
+|---|---|---|
+| `POST` | `/api/videos?name=&lat=&lon=&filename=&quality=` | Body is the raw file, streamed to disk. Metadata in the query string so no `python-multipart` dependency. Returns the job record. |
+| `GET` | `/api/videos` | All jobs, newest first. Drives the map pins. |
+| `GET` | `/api/videos/{job_id}` | Poll one job. |
+| `DELETE` | `/api/videos/{job_id}?keep_events=false` | Removes the job, its files and, by default, the events at that coordinate. |
+
+## Two things worth your review
+
+1. **`ingest_pipeline_events()` stamps the operator's coordinate onto every
+   event from the run.** The edge derives `location` from
+   `calibration.location`, and an uploaded clip has no calibration —
+   `create_auto_calibration` invents a road plane and carries a placeholder
+   coordinate (12.9716, 77.5946, which is Bengaluru). So the map coordinate is
+   the one the operator typed. It is a site marker, not a fix. `severity` is
+   left exactly as the edge derived it, and `conditions` is set back to null so
+   your enricher owns it — PRD 5.3 both ways.
+
+2. **`ingest_video.py` already POSTs to `/api/events` itself** at the end of a
+   run, with that placeholder coordinate. Ingest is idempotent on `event_id`
+   and my pass runs afterwards with the right location, so the correct value
+   wins. Worth removing that stage-6 POST from `ingest_video.py` if the CLI
+   path is not needed — but that is owner A/B's file, not mine.
+
+## Two dependencies that were undeclared
+
+`edge/norms/norms_engine.py` imports `sklearn` and `matplotlib` at module
+level, and `ingest_video.py` imports `norms_engine`, so a video upload cannot
+start without them. Added to the root `requirements.txt`.
