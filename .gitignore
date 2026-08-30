@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+data/
+*.log
+.DS_Store
+# Build artifact — regenerate with tools/build_standalone.py
+demo/netra-dashboard-standalone.html
+# Fetched from OpenStreetMap; commit it if you want offline demo guarantees
+# fixtures/road_network.json

@@ -1,0 +1,102 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ConflictEvent (PRD 5.3)",
+  "description": "~300 bytes. conditions is written ONLY by the server (M6); the edge leaves it null. There is no blame or fault field and none may be added. severity is derived, never hand-set.",
+  "type": "object",
+  "required": [
+    "event_id",
+    "time",
+    "location",
+    "type",
+    "ttc_s",
+    "severity",
+    "vehicle_a",
+    "vehicle_b",
+    "detection_quality"
+  ],
+  "properties": {
+    "event_id": {
+      "type": "string"
+    },
+    "time": {
+      "type": "string",
+      "description": "ISO 8601"
+    },
+    "location": {
+      "type": "array",
+      "items": {
+        "type": "number"
+      },
+      "minItems": 2,
+      "maxItems": 2,
+      "description": "[lat, lon]"
+    },
+    "type": {
+      "type": "string"
+    },
+    "ttc_s": {
+      "type": "number"
+    },
+    "pet_s": {
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "severity": {
+      "enum": [
+        "conflict",
+        "severe"
+      ],
+      "description": "ttc_s < 0.8 -> severe, < 1.5 -> conflict"
+    },
+    "vehicle_a": {
+      "$ref": "#/definitions/vehicle"
+    },
+    "vehicle_b": {
+      "$ref": "#/definitions/vehicle"
+    },
+    "conditions": {
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "detection_quality": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    }
+  },
+  "definitions": {
+    "vehicle": {
+      "type": "object",
+      "required": [
+        "type",
+        "speed_kmh"
+      ],
+      "properties": {
+        "type": {
+          "enum": [
+            "car",
+            "motorcycle",
+            "truck",
+            "bus",
+            "auto",
+            "pedestrian"
+          ]
+        },
+        "speed_kmh": {
+          "type": "number"
+        },
+        "direction": {
+          "enum": [
+            "normal",
+            "against flow"
+          ]
+        }
+      }
+    }
+  },
+  "additionalProperties": true
+}

@@ -1,0 +1,32 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "norms.json (PRD 5.4)",
+  "description": "null is a valid value for any field. Consumers must degrade gracefully.",
+  "type": "object",
+  "properties": {
+    "speed_85_kmh": {
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "sample_size": {
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "lanes": {
+      "type": [
+        "array",
+        "null"
+      ]
+    },
+    "signal_cycle_s": {
+      "type": [
+        "number",
+        "null"
+      ]
+    }
+  }
+}

@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>NETRA — Risk Map</title>
+<link rel="stylesheet" href="vendor/leaflet.css" />
+<link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+<div id="app">
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true"></span>
+      <div class="brand-text">
+        <h1>NETRA</h1>
+        <p>Near-miss Enabled Traffic Risk Analytics — <span id="junctionName">Risk Map</span></p>
+      </div>
+    </div>
+
+    <div class="topbar-right">
+      <div id="statusBadge" class="status-badge" role="status" aria-live="polite">
+        <span class="dot"></span><span class="status-label">Checking pipeline…</span>
+      </div>
+      <button id="bakeRoads" class="ghost-btn" type="button" title="Fetches the street network from OpenStreetMap and downloads it as fixtures/road_network.json. Commit that file and the demo runs fully offline.">
+        Bake roads to fixture
+      </button>
+    </div>
+  </header>
+
+  <div class="layout">
+
+    <aside class="filters" aria-label="Condition filters">
+      <h2>Conditions</h2>
+      <p class="filters-hint">Same junction, different conditions. This is the visual proof that risk is condition-aware, not just location-aware.</p>
+
+      <div class="filter-group">
+        <span class="filter-group-label">Light</span>
+        <div class="chip-row" id="filterLight">
+          <button class="chip active" data-value="any">Any</button>
+          <button class="chip" data-value="daylight">Daylight</button>
+          <button class="chip" data-value="dusk">Dusk</button>
+          <button class="chip" data-value="dark">After dark</button>
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <span class="filter-group-label">Weather</span>
+        <div class="chip-row" id="filterWeather">
+          <button class="chip active" data-value="any">Any</button>
+          <button class="chip" data-value="clear">Dry</button>
+          <button class="chip" data-value="light rain">Rain</button>
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <span class="filter-group-label">Severity</span>
+        <div class="chip-row" id="filterSeverity">
+          <button class="chip active" data-value="any">Any</button>
+          <button class="chip" data-value="severe">Severe only</button>
+        </div>
+      </div>
+
+      <button id="resetFilters" class="text-btn">Reset filters</button>
+
+      <div class="summary-card" id="summaryCard">
+        <div class="summary-row"><span>Conflicts shown</span><strong id="sumConflicts">–</strong></div>
+        <div class="summary-row"><span>Severe (TTC &lt; 0.8s)</span><strong id="sumSevere">–</strong></div>
+        <div class="summary-row"><span>Mean detection quality</span><strong id="sumQuality">–</strong></div>
+      </div>
+
+      <div class="health-card" id="healthCard">
+        <h3>Pipeline health <span class="tag-p2">P2</span></h3>
+        <p id="healthBody">Loading…</p>
+      </div>
+    </aside>
+
+    <main class="map-pane">
+      <div id="map" role="application" aria-label="Junction risk map"></div>
+      <div class="map-legend">
+        <span class="legend-title">Road risk</span>
+        <span class="legend-item"><i style="background:#3ba55d"></i>Low</span>
+        <span class="legend-item"><i style="background:#c7d84a"></i>Medium</span>
+        <span class="legend-item"><i style="background:#e2812c"></i>High</span>
+        <span class="legend-item"><i style="background:#e5484d"></i>Severe</span>
+        <span class="legend-divider"></span>
+        <span class="legend-item"><i class="legend-dot" style="background:#e5484d"></i>Hotspot event</span>
+      </div>
+      <div class="map-mode-note hidden" id="mapModeNote">Offline schematic view — no tile server reachable.</div>
+    </main>
+
+    <section class="detail-pane" id="detailPane" aria-label="Segment detail">
+      <div class="detail-empty" id="detailEmpty">
+        <h2 id="overviewTitle">Junction overview</h2>
+        <p class="detail-sub" id="overviewSub">—</p>
+
+        <div class="detail-stats">
+          <div class="stat"><span>Conflicts</span><strong id="ovConflicts">0</strong></div>
+          <div class="stat"><span>Severe</span><strong id="ovSevere">0</strong></div>
+          <div class="stat"><span>Corridors</span><strong id="ovCorridors">0</strong></div>
+        </div>
+
+        <h3>Corridors by risk</h3>
+        <ul class="rank-list" id="ovRanking"></ul>
+
+        <p class="hint">Select a corridor on the map for its hourly pattern and speed profile.</p>
+      </div>
+
+      <div class="detail-content hidden" id="detailContent">
+        <button class="text-btn back-btn" id="detailBack">← Back to overview</button>
+        <h2 id="detailTitle">—</h2>
+        <div class="detail-stats">
+          <div class="stat"><span>Conflicts</span><strong id="detailConflicts">0</strong></div>
+          <div class="stat"><span>Severe</span><strong id="detailSevere">0</strong></div>
+          <div class="stat"><span>Risk score</span><strong id="detailRisk">0</strong></div>
+        </div>
+
+        <h3>Conflicts by hour of day</h3>
+        <canvas id="hourChart" height="140"></canvas>
+
+        <h3>Speed distribution</h3>
+        <p class="chart-note">Dashed line marks the learned 85th-percentile speed.</p>
+        <canvas id="speedChart" height="150"></canvas>
+      </div>
+    </section>
+
+  </div>
+
+  <section class="events-pane" aria-label="Event list">
+    <div class="events-header">
+      <h2>Detected conflicts <span class="muted" id="eventsCount"></span></h2>
+      <span class="muted small">Click a row for the plain-English write-up and clip, where available.</span>
+    </div>
+    <div id="eventsList" class="events-list"></div>
+  </section>
+
+</div>
+
+<div id="clipModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="clipModalTitle">
+  <div class="modal-card">
+    <button class="modal-close" id="clipModalClose" aria-label="Close">✕</button>
+    <h3 id="clipModalTitle">Event</h3>
+    <div id="clipModalBody"></div>
+  </div>
+</div>
+
+<script src="vendor/leaflet.js"></script>
+<script src="vendor/chart.umd.js"></script>
+<script src="js/config.js"></script>
+<script src="js/fixtures.js"></script>
+<script src="js/roads.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

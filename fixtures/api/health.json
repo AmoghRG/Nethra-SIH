@@ -1,0 +1,11 @@
+{
+  "ok": true,
+  "data": {
+    "pipeline_status": "idle \u2014 no live edge connected",
+    "frame_rate_fps": null,
+    "escalations_per_min": null,
+    "last_ingest": null,
+    "note": "Live panel is P2. Wire this up once the edge pipeline (M1-M4) emits."
+  },
+  "error": null
+}

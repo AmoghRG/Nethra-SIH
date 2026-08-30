@@ -1,0 +1,21 @@
+{
+  "speed_85_kmh": 52.0,
+  "sample_size": 843,
+  "lanes": [
+    {
+      "id": 0,
+      "centreline_m": [
+        [
+          0,
+          0
+        ],
+        [
+          40,
+          2
+        ]
+      ],
+      "heading_deg": 88
+    }
+  ],
+  "signal_cycle_s": null
+}
