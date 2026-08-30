@@ -1,0 +1,71 @@
+{
+  "video_id": "pumpwell_evening",
+  "homography": [
+    [
+      1.02,
+      0.01,
+      -4120.5
+    ],
+    [
+      0.0,
+      1.05,
+      -6980.2
+    ],
+    [
+      0.0,
+      0.0002,
+      1.0
+    ]
+  ],
+  "reference_points": [
+    {
+      "pixel": [
+        412,
+        688
+      ],
+      "ground_m": [
+        0.0,
+        0.0
+      ],
+      "note": "kerb corner, north approach"
+    },
+    {
+      "pixel": [
+        610,
+        640
+      ],
+      "ground_m": [
+        12.4,
+        0.0
+      ],
+      "note": "lane line, east approach"
+    },
+    {
+      "pixel": [
+        300,
+        520
+      ],
+      "ground_m": [
+        0.0,
+        18.0
+      ],
+      "note": "footbridge pillar base"
+    },
+    {
+      "pixel": [
+        700,
+        500
+      ],
+      "ground_m": [
+        12.4,
+        18.0
+      ],
+      "note": "median edge"
+    }
+  ],
+  "rms_error_m": 0.34,
+  "location": [
+    12.86889,
+    74.86389
+  ]
+}

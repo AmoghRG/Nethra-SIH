@@ -1,0 +1,59 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "calibration.json (PRD 5.1)",
+  "type": "object",
+  "required": [
+    "video_id",
+    "homography",
+    "rms_error_m",
+    "location"
+  ],
+  "properties": {
+    "video_id": {
+      "type": "string"
+    },
+    "homography": {
+      "type": "array",
+      "items": {
+        "type": "array",
+        "items": {
+          "type": "number"
+        }
+      }
+    },
+    "reference_points": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "pixel": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          },
+          "ground_m": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          },
+          "note": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "rms_error_m": {
+      "type": "number"
+    },
+    "location": {
+      "type": "array",
+      "items": {
+        "type": "number"
+      },
+      "minItems": 2,
+      "maxItems": 2
+    }
+  }
+}

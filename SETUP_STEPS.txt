@@ -1,0 +1,336 @@
+===============================================================================
+NETRA - SETUP AND RUN STEPS (Windows / PowerShell)
+Owner E (M11 dashboard) + Owner D (M6/M7 server)
+===============================================================================
+
+Read this once before starting. Steps 1-5 are one-time setup. Step 6 is what
+you run every time afterwards.
+
+Use  py -3.14  everywhere, NOT  python3 .
+The msys2 python3 on this machine has no CA certificate bundle, so any script
+that touches the internet will fail with CERTIFICATE_VERIFY_FAILED.
+
+Use  curl.exe , NOT  curl .
+In PowerShell, plain "curl" is an alias for Invoke-WebRequest, which prints a
+script-execution warning and dumps a giant object instead of the JSON body.
+
+
+===============================================================================
+STEP 1 - UNZIP
+===============================================================================
+
+Unzip netra-merged.zip so you end up with a folder named  netra  containing:
+
+    netra\
+      contracts\      web\        server\     tools\
+      fixtures\       edge\       eval\       demo\
+
+If your unzipper nested it (netra\netra\...), move the inner folder up a level.
+
+Open PowerShell and cd into it:
+
+    cd "C:\My Programs\Hackathons\Nethra-SIH\netra"
+
+Everything below assumes you are in that folder unless it says otherwise.
+
+
+===============================================================================
+STEP 2 - ADD YOUR CARTO BASEMAP KEY
+===============================================================================
+
+Open this file in a text editor:
+
+    web\js\config.js
+
+Find the "carto" block and set the key:
+
+    carto: {
+      key: "cb1_2jia_1_93e45b0074f70164ae508e69",
+      style: "dark_all",
+    },
+
+NOTE: this is the CARTO *Basemaps* key (from carto.com/basemaps/apikey).
+It is NOT the CARTO Platform API token from the CARTO workspace - that one
+authenticates carto_dw data sources and will not serve basemap tiles.
+
+Without a key the map still works, tiles are just watermarked.
+
+
+===============================================================================
+STEP 3 - POSTGRES DATABASE (one time)
+===============================================================================
+
+You already installed PostgreSQL 18. Create the database and user:
+
+    & "C:\Program Files\PostgreSQL\18\bin\psql.exe" -U postgres -c "CREATE USER netra_user WITH PASSWORD 'netra_pass';"
+    & "C:\Program Files\PostgreSQL\18\bin\psql.exe" -U postgres -c "CREATE DATABASE netra OWNER netra_user;"
+
+It will prompt for the postgres superuser password you set during install.
+
+Verify (password is netra_pass):
+
+    & "C:\Program Files\PostgreSQL\18\bin\psql.exe" -U netra_user -d netra -c "SELECT current_database();"
+
+Should print:  netra
+
+PostGIS is NOT needed. The server tries to enable it, logs a warning if it is
+missing, and carries on with plain Postgres. That is a tested path.
+
+OPTIONAL - add psql to PATH for this terminal session only:
+
+    $env:Path += ";C:\Program Files\PostgreSQL\18\bin"
+
+
+===============================================================================
+STEP 4 - FETCH ROAD GEOMETRY (one time, needs internet)
+===============================================================================
+
+    py -3.14 tools/fetch_roads.py
+    py -3.14 tools/gen_fixtures.py
+    py -3.14 tools/build_standalone.py
+
+Expected output from gen_fixtures.py:
+
+    road network  297
+
+If it says "not baked yet", the fetch failed - see TROUBLESHOOTING below.
+
+IMPORTANT: commit fixtures\road_network.json to git once you have it.
+Overpass (the OpenStreetMap query service) is rate-limited and goes down
+periodically. You do not want to discover that at hour 22. The file is
+deliberately NOT gitignored for this reason.
+
+
+===============================================================================
+STEP 5 - INSTALL SERVER DEPENDENCIES (one time)
+===============================================================================
+
+    cd server\api
+    py -3.14 -m pip install -r requirements.txt
+    cd ..\..
+
+
+===============================================================================
+STEP 6 - RUNNING IT (every time)
+===============================================================================
+
+You need TWO terminals, both in the netra folder.
+
+--- TERMINAL A: the API server (owner D) ---
+
+    cd server\api
+    py -3.14 -m uvicorn netra_server:app --port 8000
+
+Watch the startup log. You want to see:
+
+    PostgreSQL initialized
+
+This is fine and expected:
+
+    PostGIS unavailable, using plain Postgres
+
+Leave this terminal running.
+
+--- TERMINAL B: the dashboard (owner E) ---
+
+Run this from the REPO ROOT, not from inside web\ :
+
+    py -3.14 -m http.server 8080
+
+Then open in your browser:
+
+    http://localhost:8080/web/
+
+Hard-refresh with Ctrl+Shift+R the first time - map tiles cache aggressively.
+
+
+===============================================================================
+STEP 7 - SEED TEST DATA
+===============================================================================
+
+The database starts empty, so the map will be live but blank. Fill it:
+
+    py -3.14 tools/seed_events.py --count 40
+
+Options:
+    --count 60          how many events
+    --seed 12           different random layout (same seed = same events)
+    --dry-run           print the events instead of posting them
+    --api http://...    if the server is not on localhost:8000
+
+WARNING: this is synthetic test data, NOT detector output. Never present it
+as a measured result. Clear it before showing any accuracy figures (M9):
+
+    & "C:\Program Files\PostgreSQL\18\bin\psql.exe" -U netra_user -d netra -c "DELETE FROM events WHERE event_id LIKE 'evt_seed_%';"
+
+
+===============================================================================
+STEP 8 - VERIFY IT ALL WORKS
+===============================================================================
+
+In a third terminal:
+
+    curl.exe http://localhost:8000/api/health
+    curl.exe http://localhost:8000/api/events
+    curl.exe http://localhost:8000/api/segments
+
+What to look for:
+
+  health    ->  "postgres":true
+  events    ->  "ok":true  and  "location":[12.87009,74.86409]
+                (NOT ["7","("] - that was a bug, now fixed)
+                and "conditions" populated with light/weather/hour_of_day
+  segments  ->  "ok":true  with several clusters
+                (NOT an st_y error - that was a bug, now fixed)
+
+In the browser at http://localhost:8080/web/ :
+
+  [ ] Badge top-right reads "Live API connected"
+  [ ] Real Mangaluru streets visible in dark grey (CARTO basemap)
+  [ ] Coloured corridors along real named roads
+  [ ] Red/amber hotspot dots sitting ON the roads, not floating
+  [ ] Right panel shows junction overview + "Corridors by risk"
+  [ ] Clicking a corridor shows hourly chart + speed histogram
+  [ ] Clicking "Rain" filter changes the event count
+  [ ] Clicking "After dark" changes it again
+  [ ] Clicking an event row opens narrative + clip
+
+The two filter checks matter most - that is PRD success criterion S5.
+
+
+===============================================================================
+BADGE MEANINGS (top right of the dashboard)
+===============================================================================
+
+  "Live API connected"        Everything working.
+
+  "API up, database down"     Server is running but cannot reach Postgres.
+                              Go back to STEP 3. Check Postgres is running
+                              on port 5432.
+
+  "Offline - showing fixtures"  Cannot reach the server at all.
+                              Check Terminal A is still running, and that
+                              apiBase in web\js\config.js says
+                              http://localhost:8000
+
+
+===============================================================================
+TROUBLESHOOTING
+===============================================================================
+
+fetch_roads.py: "All Overpass mirrors failed" (500 / 504 / timeout)
+    Overpass is busy or rate-limiting you. This is transient.
+    - Wait 2-5 minutes and retry.
+    - Or open the dashboard and click "Bake roads to fixture" (top right).
+      That fetches from your browser instead, then save the downloaded
+      road_network.json into fixtures\ and re-run gen_fixtures.py.
+    - Or copy fixtures\road_network.json from an older working copy.
+
+fetch_roads.py: CERTIFICATE_VERIFY_FAILED
+    You used python3 instead of py -3.14. Use py -3.14.
+    Last resort:  py -3.14 tools/fetch_roads.py --insecure
+    (public read-only OSM data, no credentials sent - but fix the cert
+    situation properly rather than making a habit of it)
+
+curl POST gives "JSON decode error"
+    PowerShell mangled the quoting. Use tools/seed_events.py instead.
+
+Map is blank / "No street geometry loaded"
+    You have not run fetch_roads.py yet, or it failed. See STEP 4.
+
+Map tiles missing but roads and dots show
+    No internet, or the CARTO key is wrong. Not fatal - the risk layer is
+    independent of the basemap, which is deliberate (PRD S6: the demo must
+    survive with the network unplugged).
+
+Watermark on the map tiles
+    CARTO key missing or not picked up. Check STEP 2, re-run
+    build_standalone.py if using the standalone file, hard-refresh.
+
+Port 8080 already in use
+    Something else grabbed it (older pgAdmin does this). Use another port:
+        py -3.14 -m http.server 8081
+    then open http://localhost:8081/web/
+
+Postgres authentication failed
+    PG18 defaults to scram-sha-256. psycopg2 handles it. If it still fails,
+    check pg_hba.conf uses scram-sha-256 for local connections.
+
+
+===============================================================================
+CHANGING THE JUNCTION
+===============================================================================
+
+Currently set to Pumpwell Circle, Mangaluru (12.86889, 74.86389).
+
+THIS IS A PLACEHOLDER. PRD open question Q1 (which demo video, and is the
+camera angle genuinely elevated) was still unanswered, so no real site was
+fixed. Once it is decided:
+
+  1. Edit web\js\config.js  ->  junction.center  and  junction.name
+  2. py -3.14 tools/fetch_roads.py
+  3. py -3.14 tools/gen_fixtures.py
+  4. py -3.14 tools/build_standalone.py
+
+Corridors, context roads and event placement all derive from that one
+coordinate, so nothing else needs changing.
+
+ALSO: server\api\netra_server.py has WeatherEnricher defaulting to
+13.0106, 74.7943 - about 16 km from Pumpwell. It only shifts sunrise/sunset
+by seconds so nothing visibly breaks, but it should track the real site.
+
+
+===============================================================================
+STANDALONE FILE (for the demo laptop)
+===============================================================================
+
+    demo\netra-dashboard-standalone.html
+
+One self-contained file, ~470 KB, everything inlined. Double-click it - no
+server needed. Runs on a laptop that is not yours.
+
+It is a BUILD ARTIFACT. Never edit it directly; edit files in web\ and run:
+
+    py -3.14 tools/build_standalone.py
+
+It will not have live API data (no server), so it shows the bundled fixtures.
+That is the safe fallback if anything goes wrong on stage.
+
+
+===============================================================================
+WHAT IS NOT DONE YET
+===============================================================================
+
+Built:      M11 dashboard (E), M6/M7 server (D)
+Not built:  M1-M5, M8-M10 - placeholder READMEs only
+
+Known gaps worth raising with the team:
+
+  1. PRD Section 5.5 lists API routes but not response bodies. That gap
+     caused most of the integration bugs. The verified shapes are written
+     up in contracts\http_api.md - propose adopting that as the real
+     frozen contract.
+
+  2. /api/segments returns scored POINTS, not road geometry, so it cannot
+     drive a road map as the PRD implies. The dashboard takes corridor
+     geometry from OpenStreetMap instead and uses that endpoint only as a
+     cross-check. Either D attaches geometry, or the PRD should say the
+     map geometry comes from OSM.
+
+  3. Clip playback has no contract at all. M11 lists it as P0 but nothing
+     in Section 5 says how a clip reaches the frontend, and M7's design
+     keeps video on the edge. Someone needs to own this or it should be
+     cut from P0.
+
+  4. compute_risk_score() in netra_server.py implements the PRD's
+     risk = base x rain x night x peak model, but NOTHING CALLS IT. So the
+     condition-multiplier design - one of the five defensible claims - is
+     not actually running. Worth fixing before anyone demos it as working.
+
+  5. M11 now depends on OpenStreetMap being fetched once. That is an
+     internet dependency not in the PRD. It is satisfied offline as long as
+     fixtures\road_network.json is committed before the finale.
+
+10 bugs were found and fixed in D's server. See server\PATCHES_TO_OWNER_D.md
+for the full list with severity and cause - 5 were hard blockers, and 4 were
+only visible by running the code against a real Postgres, not by reading it.
