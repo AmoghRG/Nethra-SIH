@@ -1,71 +1,123 @@
 {
-  "video_id": "pumpwell_evening",
+  "video_id": "junction_a_evening",
   "homography": [
     [
-      1.02,
-      0.01,
-      -4120.5
+      -0.10631458594168934,
+      -0.069636146230097,
+      79.92035966939878
     ],
     [
-      0.0,
-      1.05,
-      -6980.2
+      -3.127437679724089e-05,
+      0.18295994061001414,
+      -126.21810962017136
     ],
     [
-      0.0,
-      0.0002,
+      -4.798885612003723e-06,
+      -0.005809013248365874,
       1.0
     ]
   ],
   "reference_points": [
     {
       "pixel": [
-        412,
-        688
-      ],
-      "ground_m": [
-        0.0,
-        0.0
-      ],
-      "note": "kerb corner, north approach"
-    },
-    {
-      "pixel": [
-        610,
-        640
-      ],
-      "ground_m": [
-        12.4,
-        0.0
-      ],
-      "note": "lane line, east approach"
-    },
-    {
-      "pixel": [
         300,
-        520
+        690
       ],
       "ground_m": [
         0.0,
-        18.0
+        0.0
       ],
-      "note": "footbridge pillar base"
+      "note": "near kerb corner, left"
     },
     {
       "pixel": [
-        700,
-        500
+        980,
+        690
       ],
       "ground_m": [
-        12.4,
-        18.0
+        24.0,
+        0.0
       ],
-      "note": "median edge"
+      "note": "near kerb corner, right"
+    },
+    {
+      "pixel": [
+        790,
+        400
+      ],
+      "ground_m": [
+        24.0,
+        40.0
+      ],
+      "note": "far kerb, right"
+    },
+    {
+      "pixel": [
+        490,
+        400
+      ],
+      "ground_m": [
+        0.0,
+        40.0
+      ],
+      "note": "far kerb, left"
+    },
+    {
+      "pixel": [
+        640,
+        470
+      ],
+      "ground_m": [
+        12.1,
+        23.2
+      ],
+      "note": "median nose"
+    },
+    {
+      "pixel": [
+        640,
+        600
+      ],
+      "ground_m": [
+        11.95,
+        6.62
+      ],
+      "note": "stop line centre",
+      "held_out": true
     }
   ],
-  "rms_error_m": 0.34,
+  "rms_error_m": 0.0666,
   "location": [
-    12.86889,
-    74.86389
+    13.0106,
+    74.7943
+  ],
+  "valid_region_px": [
+    [
+      312.0,
+      678.0
+    ],
+    [
+      968.0,
+      678.0
+    ],
+    [
+      786.0,
+      406.0
+    ],
+    [
+      494.0,
+      406.0
+    ]
+  ],
+  "max_range_m": 45.0,
+  "method": {
+    "technique": "vehicle_length",
+    "assumed_uncertainty_m": 0.15,
+    "note": "Scale set from ten stationary hatchbacks averaged at 3.9 m, cross-checked against the 12 m kerb-to-kerb width. SYNTHETIC FIXTURE: replace with the real measurement for the demo clip.",
+    "validation": "holdout"
+  },
+  "image_size_px": [
+    1280,
+    720
   ]
 }

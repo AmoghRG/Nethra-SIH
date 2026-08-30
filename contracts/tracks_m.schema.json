@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "netra/tracks_m.schema.json",
+  "title": "tracks_m.jsonl — one JSON object per line, per track per frame",
+  "description": "AMENDMENT A1. Ground-plane projection of tracks_px.jsonl. Produced by M1's projection stage (owner B). Consumed by M3, and by C for M5 norms and M10 baseline.",
+  "type": "object",
+  "required": ["frame", "t", "track_id", "cls", "conf", "ground_m", "v_mps", "speed_kmh", "heading_deg"],
+  "additionalProperties": false,
+  "properties": {
+    "frame": {"type": "integer", "minimum": 0},
+    "t": {"type": "number", "minimum": 0},
+    "track_id": {"type": "integer"},
+    "cls": {"type": "string", "enum": ["car", "motorcycle", "truck", "bus", "auto", "person"]},
+    "conf": {"type": "number", "minimum": 0, "maximum": 1},
+    "ground_m": {
+      "description": "[x, y] metres. Origin at the first calibration reference point, X east, Y north, right-handed. Projected from the BOTTOM-CENTRE of the bbox, never the centroid.",
+      "type": "array", "minItems": 2, "maxItems": 2, "items": {"type": "number"}
+    },
+    "v_mps": {
+      "description": "[vx, vy] metres per second, from a least-squares fit over a sliding window. Never raw frame-to-frame differencing.",
+      "type": "array", "minItems": 2, "maxItems": 2, "items": {"type": "number"}
+    },
+    "speed_kmh": {"description": "Derived from v_mps at serialisation only. All internal computation is SI.", "type": "number", "minimum": 0},
+    "heading_deg": {"description": "Compass-style bearing of v_mps, 0 = +Y (north), increasing clockwise. Range [0, 360).", "type": "number", "minimum": 0, "exclusiveMaximum": 360}
+  }
+}

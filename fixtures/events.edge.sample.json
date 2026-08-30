@@ -1,0 +1,170 @@
+[
+  {
+    "event_id": "evt_90847351",
+    "time": "2026-08-28T19:06:02",
+    "location": [
+      13.0106,
+      74.7943
+    ],
+    "type": "crossing conflict",
+    "ttc_s": 0.94,
+    "pet_s": 1.37,
+    "severity": "conflict",
+    "vehicle_a": {
+      "type": "car",
+      "speed_kmh": 20.4
+    },
+    "vehicle_b": {
+      "type": "motorcycle",
+      "speed_kmh": 22.7
+    },
+    "conditions": null,
+    "detection_quality": 0.81,
+    "track_ids": [
+      1,
+      2
+    ],
+    "t_video_s": 2.32,
+    "min_ttc_frame": 58
+  },
+  {
+    "event_id": "evt_8548b2a6",
+    "time": "2026-08-28T19:06:04",
+    "location": [
+      13.0106,
+      74.7943
+    ],
+    "type": "crossing conflict",
+    "ttc_s": 0.85,
+    "pet_s": 1.12,
+    "severity": "conflict",
+    "vehicle_a": {
+      "type": "motorcycle",
+      "speed_kmh": 11.7
+    },
+    "vehicle_b": {
+      "type": "car",
+      "speed_kmh": 24.8
+    },
+    "conditions": null,
+    "detection_quality": 0.81,
+    "track_ids": [
+      2,
+      3
+    ],
+    "t_video_s": 4.32,
+    "min_ttc_frame": 108
+  },
+  {
+    "event_id": "evt_836330ef",
+    "time": "2026-08-28T19:06:11",
+    "location": [
+      13.0106,
+      74.7943
+    ],
+    "type": "crossing conflict",
+    "ttc_s": 0.67,
+    "pet_s": 4.85,
+    "severity": "severe",
+    "vehicle_a": {
+      "type": "car",
+      "speed_kmh": 24.7
+    },
+    "vehicle_b": {
+      "type": "auto",
+      "speed_kmh": 22.3
+    },
+    "conditions": null,
+    "detection_quality": 0.83,
+    "track_ids": [
+      5,
+      6
+    ],
+    "t_video_s": 11.0,
+    "min_ttc_frame": 275
+  },
+  {
+    "event_id": "evt_d11c82e4",
+    "time": "2026-08-28T19:06:16",
+    "location": [
+      13.0106,
+      74.7943
+    ],
+    "type": "crossing conflict",
+    "ttc_s": 0.96,
+    "pet_s": null,
+    "severity": "conflict",
+    "vehicle_a": {
+      "type": "truck",
+      "speed_kmh": 23.7
+    },
+    "vehicle_b": {
+      "type": "motorcycle",
+      "speed_kmh": 5.9
+    },
+    "conditions": null,
+    "detection_quality": 0.83,
+    "track_ids": [
+      7,
+      8
+    ],
+    "t_video_s": 16.44,
+    "min_ttc_frame": 411
+  },
+  {
+    "event_id": "evt_3bdfdf72",
+    "time": "2026-08-28T19:06:23",
+    "location": [
+      13.0106,
+      74.7943
+    ],
+    "type": "crossing conflict",
+    "ttc_s": 0.32,
+    "pet_s": null,
+    "severity": "severe",
+    "vehicle_a": {
+      "type": "bus",
+      "speed_kmh": 20.6
+    },
+    "vehicle_b": {
+      "type": "car",
+      "speed_kmh": 9.1
+    },
+    "conditions": null,
+    "detection_quality": 0.82,
+    "track_ids": [
+      9,
+      10
+    ],
+    "t_video_s": 23.4,
+    "min_ttc_frame": 585
+  },
+  {
+    "event_id": "evt_2f217201",
+    "time": "2026-08-28T19:06:28",
+    "location": [
+      13.0106,
+      74.7943
+    ],
+    "type": "crossing conflict",
+    "ttc_s": 0.95,
+    "pet_s": null,
+    "severity": "conflict",
+    "vehicle_a": {
+      "type": "motorcycle",
+      "speed_kmh": 30.8
+    },
+    "vehicle_b": {
+      "type": "car",
+      "speed_kmh": 18.0
+    },
+    "conditions": null,
+    "detection_quality": 0.83,
+    "track_ids": [
+      11,
+      12
+    ],
+    "t_video_s": 28.44,
+    "min_ttc_frame": 711
+  }
+]

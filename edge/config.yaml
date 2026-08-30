@@ -1,0 +1,109 @@
+# NETRA edge configuration
+#
+# JOINTLY OWNED BY A AND B. Changed by announcement, never silently.
+# No tuned constant is hardcoded anywhere in edge/ — it lives here or it is a
+# bug. Mixed units are the most common silent failure in this kind of
+# pipeline, so: everything below is SI (metres, seconds, m/s) except where a
+# key name says otherwise.
+
+# ---------------------------------------------------------------------------
+# Verbatim from edge PRD §3. Do not reorder or rename these keys.
+# ---------------------------------------------------------------------------
+detector:
+  weights: yolov8m.pt
+  imgsz: 640
+  conf: 0.25
+  iou: 0.45
+  device: auto
+  classes: [car, motorcycle, truck, bus, auto, person]
+
+tracker:
+  track_thresh: 0.35
+  match_thresh: 0.8
+  track_buffer: 60
+  min_track_frames: 3
+
+geometry:
+  smooth_window: 3
+  max_speed_kmh: 150
+
+conflicts:
+  ttc_conflict_s: 2.0
+  ttc_severe_s: 1.0
+  pet_threshold_s: 2.0
+  min_closing_speed_mps: 0.5
+  parallel_heading_deg: 20
+  debounce_s: 3.0
+  # --- additions ---
+  # PET is the first thing cut, so it gets an explicit switch rather than a
+  # code deletion. pet_s is nullable in the contract for exactly this reason.
+  pet_enabled: true
+  pet_max_s: 5.0            # a crossing further than this from the encounter,
+                            # or a gap wider than this, is a different event
+
+radii_m:
+  motorcycle: 1.0
+  auto: 1.4
+  car: 2.0
+  truck: 3.5
+  bus: 3.5
+  person: 0.4
+
+# ---------------------------------------------------------------------------
+# ADDITIONS BEYOND EDGE PRD §3 — everything below this line is new.
+# Kept separate so the diff against the frozen contract is obvious at a glance.
+# ---------------------------------------------------------------------------
+
+# Required by M3 acceptance criteria (edge PRD §6.4): "all six suppression
+# rules implemented and INDIVIDUALLY TOGGLEABLE in config, so their effect can
+# be shown". Turning one off and re-running is a demo beat, not a code change.
+suppression:
+  velocity_noise: true       # rule 1 — require real closing speed
+  lane_splitting: true       # rule 2 — the one that decides whether the output is usable
+  stopped_vehicles: true     # rule 3 — queued traffic at a signal
+  speed_sanity: true         # rule 4 — ID switches masquerading as 200 km/h
+  validity_region: true      # rule 5 — far-field geometry
+  debounce: true             # rule 6 — one encounter, one event
+
+# Parameters for suppression rule 2. A motorcycle filtering between two cars is
+# normal traffic, not a near-miss: it runs parallel and holds a steady lateral
+# gap that never closes. The minimum-offset test is what keeps genuine
+# rear-end conflicts (same path, gap ~0) from being suppressed along with it.
+lane_split:
+  lateral_stability_m: 0.75   # max std-dev of the lateral gap over the window.
+                              # A closing RATE was tried instead and was four
+                              # times worse on real footage: on a bend the
+                              # reference heading rotates and a slope reads it
+                              # as convergence that is not there.
+  min_lateral_offset_m: 1.0   # below this they share a path, so a rear-end
+                              # conflict is real and must NOT be suppressed
+  history_frames: 5           # readings needed before the rule may fire
+
+# Rule 3. Both vehicles must be genuinely moving. Stopped vehicles have a tiny
+# separation, which drives C < 0 and yields a meaningless TTC of zero.
+motion:
+  min_moving_speed_mps: 0.5
+
+# Wall-clock anchoring. `t` is always seconds from video start; the wall-clock
+# stamp on an emitted event is derived from this. The two are never mixed.
+video:
+  start_time: "2026-08-28T19:06:00"
+  fps: 25.0
+
+# Event emission (edge PRD §8).
+emit:
+  batch_max_events: 20
+  batch_max_seconds: 5.0
+  max_event_bytes: 400
+  buffer_db: out/buffer.db
+  backoff_initial_s: 1.0
+  backoff_max_s: 30.0
+  timeout_s: 5.0
+
+# Motion gate (M4, P2). A power and thermal contribution, not a throughput
+# rescue — see edge PRD §7.1 before writing any slide copy about it.
+gate:
+  enabled: false
+  downscale: 4
+  pixel_diff_threshold: 25
+  min_changed_fraction: 0.002

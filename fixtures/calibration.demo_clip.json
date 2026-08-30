@@ -1,0 +1,190 @@
+{
+  "video_id": "road_traffic_demo",
+  "homography": [
+    [
+      0.19911384830782658,
+      0.09939981133435367,
+      -156.85790183194356
+    ],
+    [
+      0.0023046915772456256,
+      -0.2615791880272981,
+      259.55732320169915
+    ],
+    [
+      0.0005512472683014929,
+      0.01650133579768639,
+      1.0
+    ]
+  ],
+  "reference_points": [
+    {
+      "pixel": [
+        149.9,
+        995.5
+      ],
+      "ground_m": [
+        -1.75,
+        0.0
+      ],
+      "note": "left lane centre at dash 0"
+    },
+    {
+      "pixel": [
+        255.0,
+        995.5
+      ],
+      "ground_m": [
+        0.0,
+        0.0
+      ],
+      "note": "centre-line dash 0"
+    },
+    {
+      "pixel": [
+        452.1,
+        995.5
+      ],
+      "ground_m": [
+        1.75,
+        0.0
+      ],
+      "note": "right lane centre at dash 0"
+    },
+    {
+      "pixel": [
+        345.2,
+        700.3
+      ],
+      "ground_m": [
+        -1.75,
+        6.0
+      ],
+      "note": "left lane centre at dash 1"
+    },
+    {
+      "pixel": [
+        428.1,
+        700.3
+      ],
+      "ground_m": [
+        0.0,
+        6.0
+      ],
+      "note": "centre-line dash 1",
+      "held_out": true
+    },
+    {
+      "pixel": [
+        564.1,
+        700.3
+      ],
+      "ground_m": [
+        1.75,
+        6.0
+      ],
+      "note": "right lane centre at dash 1"
+    },
+    {
+      "pixel": [
+        437.8,
+        535.3
+      ],
+      "ground_m": [
+        -1.75,
+        12.0
+      ],
+      "note": "left lane centre at dash 2"
+    },
+    {
+      "pixel": [
+        516.8,
+        535.3
+      ],
+      "ground_m": [
+        0.0,
+        12.0
+      ],
+      "note": "centre-line dash 2",
+      "held_out": true
+    },
+    {
+      "pixel": [
+        613.1,
+        535.3
+      ],
+      "ground_m": [
+        1.75,
+        12.0
+      ],
+      "note": "right lane centre at dash 2"
+    },
+    {
+      "pixel": [
+        493.5,
+        424.3
+      ],
+      "ground_m": [
+        -1.75,
+        18.0
+      ],
+      "note": "left lane centre at dash 3"
+    },
+    {
+      "pixel": [
+        570.7,
+        424.3
+      ],
+      "ground_m": [
+        0.0,
+        18.0
+      ],
+      "note": "centre-line dash 3"
+    },
+    {
+      "pixel": [
+        640.5,
+        424.3
+      ],
+      "ground_m": [
+        1.75,
+        18.0
+      ],
+      "note": "right lane centre at dash 3"
+    }
+  ],
+  "rms_error_m": 0.1361,
+  "location": [
+    13.0106,
+    74.7943
+  ],
+  "valid_region_px": [
+    [
+      41.2,
+      1000.0
+    ],
+    [
+      648.1,
+      1000.0
+    ],
+    [
+      709.9,
+      420.0
+    ],
+    [
+      417.9,
+      420.0
+    ]
+  ],
+  "max_range_m": 40.0,
+  "method": {
+    "technique": "road_markings",
+    "assumed_uncertainty_m": 1.0,
+    "note": "LATERAL scale from an assumed 3.5 m lane width, applied to the two lane-centre paths fitted from the ground-contact points of 75 real tracks over 1500 frames. LONGITUDINAL scale from an assumed 6.0 m pitch on carriageway A's broken centre line. The four dashes used were verified consecutive and uniformly spaced: their cross-ratio is 1.3477 against the 4/3 expected for equal world spacing, 1.1% off. The pitch itself is NOT measured - a homography absorbs any affine change of world coordinates, so a metric length along the road cannot be derived from one across it. 6.0 m was chosen because it yields an 85th-percentile speed of 52 km/h, the only candidate in a plausible urban range (4.5 m gives 39, 9 m gives 78), and because the measured mark-to-gap ratio of about 1:2 fits a 2 m mark with a 4 m gap. EVERY DISTANCE AND SPEED SCALES LINEARLY WITH THIS NUMBER. Replace it with a satellite measurement between two fixed features before quoting any figure.",
+    "validation": "holdout"
+  },
+  "image_size_px": [
+    1920,
+    1080
+  ]
+}

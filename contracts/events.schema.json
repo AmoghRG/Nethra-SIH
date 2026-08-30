@@ -1,0 +1,63 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ConflictEvent",
+  "description": "Schema for Section 5.3 ConflictEvent record (Output of M3, enriched by M6)",
+  "type": "object",
+  "required": [
+    "event_id",
+    "time",
+    "location",
+    "type",
+    "ttc_s",
+    "pet_s",
+    "severity",
+    "vehicle_a",
+    "vehicle_b",
+    "detection_quality"
+  ],
+  "properties": {
+    "event_id": {"type": "string"},
+    "time": {"type": "string", "format": "date-time"},
+    "location": {
+      "type": "array",
+      "items": {"type": "number"},
+      "minItems": 2,
+      "maxItems": 2,
+      "description": "[lat, lon]"
+    },
+    "type": {"type": "string"},
+    "ttc_s": {"type": ["number", "null"]},
+    "pet_s": {"type": ["number", "null"]},
+    "severity": {
+      "type": "string",
+      "enum": ["conflict", "severe"]
+    },
+    "vehicle_a": {
+      "type": "object",
+      "required": ["type", "speed_kmh", "direction"],
+      "properties": {
+        "type": {"type": "string"},
+        "speed_kmh": {"type": "number"},
+        "direction": {"type": "string"}
+      }
+    },
+    "vehicle_b": {
+      "type": "object",
+      "required": ["type", "speed_kmh", "direction"],
+      "properties": {
+        "type": {"type": "string"},
+        "speed_kmh": {"type": "number"},
+        "direction": {"type": "string"}
+      }
+    },
+    "conditions": {
+      "type": ["object", "null"],
+      "properties": {
+        "light": {"type": "string"},
+        "weather": {"type": ["string", "null"]},
+        "surface": {"type": "string"}
+      }
+    },
+    "detection_quality": {"type": "number", "minimum": 0.0, "maximum": 1.0}
+  }
+}

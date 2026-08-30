@@ -1,0 +1,146 @@
+{
+  "video_id": "road_traffic_3_view3",
+  "homography": [
+    [
+      0.01829103886239041,
+      -0.036899633947720084,
+      3.4552225259670326
+    ],
+    [
+      0.022833907161942654,
+      0.03394796932627548,
+      -12.144623751799276
+    ],
+    [
+      -0.0005367423677343407,
+      0.0005856638649123528,
+      1.0
+    ]
+  ],
+  "reference_points": [
+    {
+      "pixel": [
+        228.0,
+        206.0
+      ],
+      "ground_m": [
+        0.0,
+        0.0
+      ],
+      "note": "red car rear left"
+    },
+    {
+      "pixel": [
+        262.0,
+        177.0
+      ],
+      "ground_m": [
+        1.76,
+        0.0
+      ],
+      "note": "red car rear right"
+    },
+    {
+      "pixel": [
+        376.0,
+        235.0
+      ],
+      "ground_m": [
+        1.76,
+        4.75
+      ],
+      "note": "red car front right",
+      "held_out": true
+    },
+    {
+      "pixel": [
+        342.0,
+        264.0
+      ],
+      "ground_m": [
+        0.0,
+        4.75
+      ],
+      "note": "red car front left"
+    },
+    {
+      "pixel": [
+        390.0,
+        145.0
+      ],
+      "ground_m": [
+        6.191,
+        1.554
+      ],
+      "note": "silver car rear left"
+    },
+    {
+      "pixel": [
+        428.0,
+        127.0
+      ],
+      "ground_m": [
+        7.649,
+        2.54
+      ],
+      "note": "silver car rear right"
+    },
+    {
+      "pixel": [
+        465.0,
+        197.0
+      ],
+      "ground_m": [
+        4.987,
+        6.474
+      ],
+      "note": "silver car front right",
+      "held_out": true
+    },
+    {
+      "pixel": [
+        424.0,
+        217.0
+      ],
+      "ground_m": [
+        3.529,
+        5.488
+      ],
+      "note": "silver car front left"
+    }
+  ],
+  "rms_error_m": 0.4746,
+  "location": [
+    13.0106,
+    74.7943
+  ],
+  "valid_region_px": [
+    [
+      80.0,
+      340.0
+    ],
+    [
+      620.0,
+      340.0
+    ],
+    [
+      560.0,
+      100.0
+    ],
+    [
+      250.0,
+      100.0
+    ]
+  ],
+  "max_range_m": 40.0,
+  "method": {
+    "technique": "vehicle_length",
+    "assumed_uncertainty_m": 1.2,
+    "note": "PROVISIONAL. Snow covers every road marking on this clip, so the only objects of known size are the vehicles. Scale is set from two stationary saloons assumed to be 4.75m x 1.76m, with the second car's pose solved jointly with the homography (11 parameters, 16 coordinates). The depth baseline between the two cars is about 150 px in an 848x480 frame, so perspective is weakly constrained and error grows quickly away from them - hence max_range_m 25 and a tight validity polygon. Treat every distance and speed from this calibration as indicative, not measured. This view also covers only frames 581+; the clip cuts between three camera positions and each would need its own calibration. Validity polygon widened to cover the collision area; with an affine-collapsed fit the polygon is not doing the job it does on a properly calibrated view.",
+    "validation": "holdout"
+  },
+  "image_size_px": [
+    848,
+    480
+  ]
+}

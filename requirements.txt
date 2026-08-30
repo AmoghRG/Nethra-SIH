@@ -1,0 +1,21 @@
+# NETRA edge pipeline — dependencies
+#
+# CORE. Everything owner B builds (calibration solve, ground projection, TTC,
+# suppression, debounce, event emission) and the entire test suite runs on
+# these alone. Install these first; the pipeline is exercisable on fixtures
+# before the detector is ever installed.
+numpy>=1.26
+PyYAML>=6.0
+requests>=2.31
+
+# DETECTOR EXTRAS. Needed only for owner A's lane (M2 detection/tracking,
+# M4 motion gate) and for the frame-extraction and point-picking helpers in
+# M1. Imported lazily at the call site, so their absence never breaks an
+# import elsewhere in the tree.
+#   pip install ultralytics opencv-python lap
+ultralytics>=8.3
+opencv-python>=4.9
+lap>=0.5
+
+# TEST
+pytest>=8.0

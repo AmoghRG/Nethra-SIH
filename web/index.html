@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>NETRA — Risk Map</title>
+<title>NETRA — Near-Miss Traffic Risk Analytics</title>
 <link rel="stylesheet" href="vendor/leaflet.css" />
 <link rel="stylesheet" href="css/styles.css" />
 </head>
@@ -24,8 +24,17 @@
       <div id="statusBadge" class="status-badge" role="status" aria-live="polite">
         <span class="dot"></span><span class="status-label">Checking pipeline…</span>
       </div>
-      <button id="bakeRoads" class="ghost-btn" type="button" title="Fetches the street network from OpenStreetMap and downloads it as fixtures/road_network.json. Commit that file and the demo runs fully offline.">
-        Bake roads to fixture
+      <button id="openVideoIngestBtn" class="video-btn" type="button" title="Input video & GPS location to detect and highlight deadly collision areas in red">
+        🎥 Ingest Video & Location
+      </button>
+      <button id="runPipelineBtn" class="action-btn" type="button" title="Run the full Edge Detection & Conflict pipeline on sample/video and ingest live">
+        ▶ Quick Pipeline
+      </button>
+      <button id="openDiagnosticsBtn" class="ghost-btn" type="button" title="View M1–M10 Module Diagnostics, Ground-Truth Validation, & Benchmarks">
+        Module Metrics (M1–M10)
+      </button>
+      <button id="bakeRoads" class="ghost-btn" type="button" title="Fetches the street network from OpenStreetMap and downloads it as fixtures/road_network.json.">
+        Bake roads
       </button>
     </div>
   </header>
@@ -34,7 +43,7 @@
 
     <aside class="filters" aria-label="Condition filters">
       <h2>Conditions</h2>
-      <p class="filters-hint">Same junction, different conditions. This is the visual proof that risk is condition-aware, not just location-aware.</p>
+      <p class="filters-hint">Same junction, different conditions. Real-time visual proof that risk is condition-aware (M6), not just location-aware.</p>
 
       <div class="filter-group">
         <span class="filter-group-label">Light</span>
@@ -65,6 +74,16 @@
 
       <button id="resetFilters" class="text-btn">Reset filters</button>
 
+      <div class="multipliers-card" id="multipliersCard">
+        <h3>M6 Diurnal Multipliers</h3>
+        <div class="multiplier-grid">
+          <div class="m-item"><span>Rain Factor</span><strong id="multRain">1.0×</strong></div>
+          <div class="m-item"><span>Night Factor</span><strong id="multNight">1.0×</strong></div>
+          <div class="m-item"><span>Peak Factor</span><strong id="multPeak">1.0×</strong></div>
+          <div class="m-item"><span>Solar Light</span><strong id="multLight">Daylight</strong></div>
+        </div>
+      </div>
+
       <div class="summary-card" id="summaryCard">
         <div class="summary-row"><span>Conflicts shown</span><strong id="sumConflicts">–</strong></div>
         <div class="summary-row"><span>Severe (TTC &lt; 0.8s)</span><strong id="sumSevere">–</strong></div>
@@ -72,26 +91,54 @@
       </div>
 
       <div class="health-card" id="healthCard">
-        <h3>Pipeline health <span class="tag-p2">P2</span></h3>
+        <h3>Pipeline Health <span class="tag-p2">Live</span></h3>
         <p id="healthBody">Loading…</p>
       </div>
     </aside>
 
     <main class="map-pane">
+      <div id="deadlyAlertBanner" class="deadly-alert-banner hidden">
+        <span class="alert-icon">⚠️</span>
+        <div class="alert-text">
+          <strong>CRITICAL DANGER DETECTED:</strong>
+          <span id="deadlyAlertMessage">Deadly near-miss collision area (TTC &lt; 0.8s) identified. Corridors highlighted in intense RED.</span>
+        </div>
+      </div>
       <div id="map" role="application" aria-label="Junction risk map"></div>
       <div class="map-legend">
         <span class="legend-title">Road risk</span>
         <span class="legend-item"><i style="background:#3ba55d"></i>Low</span>
         <span class="legend-item"><i style="background:#c7d84a"></i>Medium</span>
         <span class="legend-item"><i style="background:#e2812c"></i>High</span>
-        <span class="legend-item"><i style="background:#e5484d"></i>Severe</span>
+        <span class="legend-item"><i style="background:#e5484d;box-shadow:0 0 6px #e5484d"></i>Deadly</span>
         <span class="legend-divider"></span>
-        <span class="legend-item"><i class="legend-dot" style="background:#e5484d"></i>Hotspot event</span>
+        <span class="legend-item"><i class="legend-dot" style="background:#e5484d"></i>Hotspot</span>
+        <span class="legend-divider"></span>
+        <span class="legend-item">🚩 Accident Flag</span>
       </div>
       <div class="map-mode-note hidden" id="mapModeNote">Offline schematic view — no tile server reachable.</div>
     </main>
 
     <section class="detail-pane" id="detailPane" aria-label="Segment detail">
+      
+      <!-- Video Live Telemetry Card (Shown when video is analyzed) -->
+      <div id="videoTelemetryCard" class="video-telemetry-card hidden">
+        <div class="telemetry-header">
+          <h3>📹 Bounding-Box Detection Video</h3>
+          <div class="telemetry-btns">
+            <button id="expandVideoBtn" class="text-btn small" title="Expand Full Video Player">⛶ Expand</button>
+            <button id="closeTelemetryBtn" class="text-btn small" title="Hide player">✕</button>
+          </div>
+        </div>
+        <div class="video-container">
+          <video id="annotatedVideoPlayer" controls autoplay loop muted playsinline preload="auto" src="/out/annotated_video.mp4"></video>
+        </div>
+        <div class="danger-badge-bar" id="telemetryDangerBar">
+          <span class="danger-badge severe" id="dangerLevelBadge">DEADLY HOTSPOT</span>
+          <span class="danger-meta" id="dangerMeta">TTC &lt; 0.8s</span>
+        </div>
+      </div>
+
       <div class="detail-empty" id="detailEmpty">
         <h2 id="overviewTitle">Junction overview</h2>
         <p class="detail-sub" id="overviewSub">—</p>
@@ -100,6 +147,13 @@
           <div class="stat"><span>Conflicts</span><strong id="ovConflicts">0</strong></div>
           <div class="stat"><span>Severe</span><strong id="ovSevere">0</strong></div>
           <div class="stat"><span>Corridors</span><strong id="ovCorridors">0</strong></div>
+        </div>
+
+        <div class="norms-card" id="normsCard">
+          <h3>M5 Calibrated Road Norms</h3>
+          <div class="summary-row"><span>Learned V85 Limit</span><strong id="normV85">–</strong></div>
+          <div class="summary-row"><span>Vehicle Sample Size</span><strong id="normSample">–</strong></div>
+          <div class="summary-row"><span>Discovered Lanes</span><strong id="normLanes">–</strong></div>
         </div>
 
         <h3>Corridors by risk</h3>
@@ -121,7 +175,7 @@
         <canvas id="hourChart" height="140"></canvas>
 
         <h3>Speed distribution</h3>
-        <p class="chart-note">Dashed line marks the learned 85th-percentile speed.</p>
+        <p class="chart-note">Dashed line marks the learned 85th-percentile speed (M5 Road Norms).</p>
         <canvas id="speedChart" height="150"></canvas>
       </div>
     </section>
@@ -131,18 +185,152 @@
   <section class="events-pane" aria-label="Event list">
     <div class="events-header">
       <h2>Detected conflicts <span class="muted" id="eventsCount"></span></h2>
-      <span class="muted small">Click a row for the plain-English write-up and clip, where available.</span>
+      <span class="muted small">Click a row for the M8 plain-English incident write-up and video clip.</span>
     </div>
     <div id="eventsList" class="events-list"></div>
   </section>
 
 </div>
 
+<!-- Video Ingestion & Location Picker Modal -->
+<div id="videoModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="videoModalTitle">
+  <div class="modal-card modal-large">
+    <button class="modal-close" id="videoModalClose" aria-label="Close">✕</button>
+    <div class="modal-header-tabs">
+      <h3 id="videoModalTitle">📹 Ingest Traffic Video & Set Location</h3>
+      <p class="modal-sub">Upload video footage or select a preset, set its GPS location, and NETRA will detect near-misses, calculate metric speeds, plant an accident severity flag 🚩, and highlight the area in <strong>RED</strong> if dangerous.</p>
+    </div>
+    
+    <div class="video-modal-body">
+      
+      <!-- Video Selection Form -->
+      <div class="form-section">
+        <h4>1. Video Source</h4>
+        <div class="source-toggle">
+          <button class="toggle-btn active" id="btnSelectPreset" type="button">Select Server Video / Preset</button>
+          <button class="toggle-btn" id="btnUploadFile" type="button">Upload Video File (.mp4)</button>
+        </div>
+
+        <!-- Preset video selection -->
+        <div id="presetVideoSection" class="source-content">
+          <label class="form-label">Available Footage</label>
+          <select id="videoPresetSelect" class="form-input">
+            <option value="Road_traffi_ video.mp4">Road_traffi_ video.mp4 (Elevated Highway Footbridge — Live Crossing Traffic)</option>
+            <option value="demo/clips/evt_00405.webm">demo/clips/evt_00405.webm (Severe Intersection Conflict — Car vs Motorcycle)</option>
+            <option value="demo/clips/evt_00417.webm">demo/clips/evt_00417.webm (Deadly Near-Miss Collision — Car vs Bus)</option>
+          </select>
+        </div>
+
+        <!-- File Upload selection -->
+        <div id="uploadFileSection" class="source-content hidden">
+          <label class="form-label">Upload Video File (.mp4, .webm, .avi, .mkv)</label>
+          <input type="file" id="videoFileInput" class="form-file-input" accept="video/mp4,video/webm,video/avi,video/mkv" />
+          <p class="file-hint">Tip: Video will be processed with GPU CUDA acceleration & YOLOv8 ByteTrack.</p>
+        </div>
+      </div>
+
+      <!-- Location Selection Form -->
+      <div class="form-section">
+        <h4>2. Target Location & Junction (GPS)</h4>
+        <div class="form-row">
+          <div class="form-col flex-2">
+            <label class="form-label">Junction / Site Name</label>
+            <input type="text" id="videoJunctionName" class="form-input" value="Pumpwell Circle, Mangaluru" placeholder="e.g. Pumpwell Circle, Mangaluru" />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-col">
+            <label class="form-label">Latitude (°N)</label>
+            <input type="number" step="0.00001" id="videoLat" class="form-input" value="12.86889" />
+          </div>
+          <div class="form-col">
+            <label class="form-label">Longitude (°E)</label>
+            <input type="number" step="0.00001" id="videoLon" class="form-input" value="74.86389" />
+          </div>
+        </div>
+
+        <!-- Quick location presets -->
+        <label class="form-label">Quick Location Presets</label>
+        <div class="preset-pills">
+          <button type="button" class="preset-pill" data-name="Pumpwell Circle, Mangaluru" data-lat="12.86889" data-lon="74.86389">📍 Mangaluru (NH-66)</button>
+          <button type="button" class="preset-pill" data-name="Silk Board Junction, Bengaluru" data-lat="12.9176" data-lon="77.6238">📍 Bengaluru (Silk Board)</button>
+          <button type="button" class="preset-pill" data-name="Majestic Cross, Bengaluru" data-lat="12.9774" data-lon="77.5708">📍 Bengaluru (Majestic)</button>
+          <button type="button" class="preset-pill" data-name="Bandra Junction, Mumbai" data-lat="19.0596" data-lon="72.8295">📍 Mumbai (Bandra)</button>
+          <button type="button" class="preset-pill" data-name="Connaught Place, Delhi" data-lat="28.6315" data-lon="77.2167">📍 Delhi (CP Outer)</button>
+        </div>
+      </div>
+
+      <!-- Ingestion Settings -->
+      <div class="form-section">
+        <h4>3. Pipeline Settings</h4>
+        <div class="form-row">
+          <div class="form-col">
+            <label class="form-label">Processing Frames</label>
+            <select id="videoFramesSelect" class="form-input">
+              <option value="120">Fast Preview (120 frames ~ 5s fast scan)</option>
+              <option value="300">Standard Analysis (300 frames ~ 10s)</option>
+              <option value="900">Deep Analysis (900 frames ~ 30s)</option>
+              <option value="0">Entire Video (Full clip)</option>
+            </select>
+          </div>
+          <div class="form-col">
+            <label class="form-label">Detector Model</label>
+            <select id="videoModelSelect" class="form-input">
+              <option value="yolov8m.pt">YOLOv8 Medium (Recommended)</option>
+              <option value="yolov8n.pt">YOLOv8 Nano (Ultra Fast INT8)</option>
+              <option value="yolov8x.pt">YOLOv8 Extra-Large (Max Accuracy)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button id="startVideoAnalysisBtn" class="primary-action-btn" type="button">
+          🚀 Run Detection & Plant Severity Flag
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Annotated Video Full-View Modal -->
+<div id="annotatedVideoModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="annotatedModalTitle">
+  <div class="modal-card modal-large">
+    <button class="modal-close" id="annotatedModalClose" aria-label="Close">✕</button>
+    <h3 id="annotatedModalTitle">📹 Annotated Video Analytics Playback</h3>
+    <p class="modal-sub">Shows vehicle bounding boxes, ground metric speeds in km/h, and real-time Time-to-Collision (TTC) conflict alerts.</p>
+    <div class="annotated-modal-body">
+      <video id="fullAnnotatedPlayer" controls autoplay loop playsinline preload="auto" class="video-modal-player" src="/out/annotated_video.mp4"></video>
+    </div>
+  </div>
+</div>
+
+<!-- Event Detail Modal (M8 Narration + Video Clip) -->
 <div id="clipModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="clipModalTitle">
   <div class="modal-card">
     <button class="modal-close" id="clipModalClose" aria-label="Close">✕</button>
     <h3 id="clipModalTitle">Event</h3>
     <div id="clipModalBody"></div>
+  </div>
+</div>
+
+<!-- Diagnostics & Module Metrics Modal (M1, M4, M5, M9, M10) -->
+<div id="diagnosticsModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="diagModalTitle">
+  <div class="modal-card modal-large">
+    <button class="modal-close" id="diagModalClose" aria-label="Close">✕</button>
+    <div class="modal-header-tabs">
+      <h3 id="diagModalTitle">System & Module Diagnostics</h3>
+      <div class="tab-buttons" id="diagTabs">
+        <button class="tab-btn active" data-tab="tab-eval">M9 & M10 Evaluation</button>
+        <button class="tab-btn" data-tab="tab-bench">M4 CPU Benchmark</button>
+        <button class="tab-btn" data-tab="tab-norms">M5 Road Norms</button>
+        <button class="tab-btn" data-tab="tab-calib">M1 Calibration</button>
+      </div>
+    </div>
+    <div class="diag-modal-body" id="diagModalContent">
+      <!-- Injected by JavaScript -->
+    </div>
   </div>
 </div>
 

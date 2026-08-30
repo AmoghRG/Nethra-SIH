@@ -1,7 +1,30 @@
 {
   "ok": true,
   "data": {
-    "status": "healthy"
+    "status": "healthy",
+    "pipeline": {
+      "fps": 18.4,
+      "target_fps": 30.0,
+      "cpu_utilization_pct": 34.2,
+      "detector_mode": "laptop_cpu_proxy_320",
+      "motion_gate_active": true,
+      "escalation_rate_pct": 52.0,
+      "frames_processed": 1800,
+      "dropped_frames": 0
+    },
+    "buffer": {
+      "pending_events": 0,
+      "storage": "sqlite",
+      "sync_status": "synced",
+      "last_flush": "2026-08-30T09:48:10Z"
+    },
+    "database": {
+      "status": "connected",
+      "engine": "postgresql",
+      "latency_ms": 4.2
+    },
+    "uptime_seconds": 3840.5,
+    "timestamp": "2026-08-30T09:49:52Z"
   },
   "error": null
 }
