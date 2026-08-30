@@ -1,0 +1,42 @@
+[
+  {
+    "event_id": "evt_00417",
+    "narration": "Event evt_00417 occurred at 2026-08-28T19:47:12: crossing conflict. The conflict was classified as severe. A motorcycle was travelling at 47 km/h. A car was travelling at 31 km/h. TTC was 0.8 seconds and PET was 1.4 seconds. Conditions: dark, light rain, wet."
+  },
+  {
+    "event_id": "evt_00418",
+    "narration": "Event evt_00418 occurred at 2026-08-28T21:15:30: rear-end conflict. The conflict was classified as moderate. A car was travelling at 38 km/h. A bus was travelling at 25 km/h. TTC was 1.2 seconds and PET was 2.0 seconds. Conditions: dark, clear, dry."
+  },
+  {
+    "event_id": "evt_00419",
+    "narration": "Event evt_00419 occurred at 2026-08-28T17:32:05: merging conflict. The conflict was classified as conflict. A car was travelling at 42 km/h. A motorcycle was travelling at 36 km/h. TTC was 1.1 seconds and PET was 1.8 seconds. Conditions: daylight, clear, dry."
+  },
+  {
+    "event_id": "evt_00420",
+    "narration": "Event evt_00420 occurred at 2026-08-28T08:21:44: crossing conflict. The conflict was classified as severe. A bus was travelling at 29 km/h. A car was travelling at 34 km/h. TTC was 0.6 seconds and PET was 1.0 seconds. Conditions: daylight, light rain, wet."
+  },
+  {
+    "event_id": "evt_00421",
+    "narration": "Event evt_00421 occurred at 2026-08-28T13:05:19: rear-end conflict. The conflict was classified as conflict. A car was travelling at 35 km/h. A car was travelling at 27 km/h. TTC was 1.4 seconds and PET was 2.3 seconds. Conditions: daylight, clear, dry."
+  },
+  {
+    "event_id": "evt_00422",
+    "narration": "Event evt_00422 occurred at 2026-08-28T22:41:07: crossing conflict. The conflict was classified as severe. A motorcycle was travelling at 51 km/h. A bus was travelling at 28 km/h. TTC was 0.7 seconds and PET was 1.2 seconds. Conditions: dark, moderate rain, wet."
+  },
+  {
+    "event_id": "evt_00423",
+    "narration": "Event evt_00423 occurred at 2026-08-28T16:18:33: merging conflict. The conflict was classified as conflict. A motorcycle was travelling at 40 km/h. A car was travelling at 44 km/h. TTC was 1.3 seconds and PET was 1.9 seconds. Conditions: daylight, clear, dry."
+  },
+  {
+    "event_id": "evt_00424",
+    "narration": "Event evt_00424 occurred at 2026-08-28T20:03:51: rear-end conflict. The conflict was classified as conflict. A bus was travelling at 32 km/h. A motorcycle was travelling at 39 km/h. TTC was 0.9 seconds and PET was 1.5 seconds. Conditions: dark, light rain, wet."
+  },
+  {
+    "event_id": "evt_00425",
+    "narration": "Event evt_00425 occurred at 2026-08-28T11:46:26: crossing conflict. The conflict was classified as conflict. A car was travelling at 46 km/h. A motorcycle was travelling at 33 km/h. TTC was 1.0 seconds and PET was 1.7 seconds. Conditions: daylight, clear, dry."
+  },
+  {
+    "event_id": "evt_00426",
+    "narration": "Event evt_00426 occurred at 2026-08-28T18:27:48: merging conflict. The conflict was classified as conflict. A car was travelling at 41 km/h. A bus was travelling at 30 km/h. TTC was 1.45 seconds and PET was 2.1 seconds. Conditions: dusk, clear, dry."
+  }
+]

@@ -1,0 +1,15 @@
+{
+  "ok": true,
+  "data": [
+    {
+      "event_id": "evt_00417",
+      "time": "2026-08-28T19:47:12",
+      "location": [13.0106, 74.7943],
+      "type": "crossing conflict",
+      "ttc_s": 0.8,
+      "pet_s": 1.4,
+      "severity": "severe"
+    }
+  ],
+  "error": null
+}

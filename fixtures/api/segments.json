@@ -1,0 +1,12 @@
+{
+  "ok": true,
+  "data": [
+    {
+      "segment_id": "seg_001",
+      "location": [13.0106, 74.7943],
+      "risk_score": 0.78,
+      "conflict_count": 23
+    }
+  ],
+  "error": null
+}
